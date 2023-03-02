@@ -44,8 +44,8 @@ public final class Constants {
     public static final double openLoopRamp = 0.25;
     public static final double closedLoopRamp = 0.0;
 
-    public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1
-    public static final double angleGearRatio = (150.0 / 7.0 / 1.0); // 12.8:1
+    public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1 (6.7460317460317460317460317460317)
+    public static final double angleGearRatio = (150.0 / 7.0 / 1.0); // 150/7 : 1
 
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
         new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
@@ -83,8 +83,8 @@ public final class Constants {
     public static final double angleConversionFactor = 360.0 / angleGearRatio;
 
     /* Swerve Profiling Values */
-    public static final double maxSpeed = 4.5; // meters per second
-    public static final double maxAngularVelocity = 11.5;
+    public static final double maxSpeed = 4.2; // meters per second
+    public static final double maxAngularVelocity = 13.5; // meters per second
 
     /* Neutral Modes */
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;

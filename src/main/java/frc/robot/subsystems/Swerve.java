@@ -90,6 +90,14 @@ public class Swerve extends SubsystemBase {
     return states;
   }
 
+  public SwerveModulePosition[] getPositions() {
+    SwerveModulePosition[] positions = new SwerveModulePosition[4];
+    for (SwerveModule mod : mSwerveMods){
+      positions[mod.moduleNumber] = mod.getPosition();
+    }
+    return positions;
+  }
+
   public void zeroGyro() {
     gyro.setYaw(0);
   }
@@ -102,7 +110,7 @@ public class Swerve extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //swerveOdometry.update(getYaw(), getStates());
+    swerveOdometry.update(getYaw(), getPositions());
     field.setRobotPose(getPose());
 
     for (SwerveModule mod : mSwerveMods) {

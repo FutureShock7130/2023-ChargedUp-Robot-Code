@@ -8,6 +8,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
@@ -52,8 +53,6 @@ public class SwerveModule {
 
     /* Angle Motor Config */
     angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
-    //integratedAngleEncoder = angleMotor.getEncoder();
-    //angleController = angleMotor.getPIDController();
     configAngleMotor();
 
     /* Drive Motor Config */
@@ -66,9 +65,7 @@ public class SwerveModule {
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-    // Custom optimize command, since default WPILib optimize assumes continuous
-    // controller which
-    // REV and CTRE are not
+    // Custom optimize command, since default WPILib optimize assumes continuous controller which REV and CTRE are not
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
     // desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
@@ -76,14 +73,13 @@ public class SwerveModule {
         ? lastAngle
         : desiredState.angle;
 
-    
     double error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
     double constrainedError = MathUtility.constrainAngleDegrees(error);
     double rotorOutput = rotorPID.calculate(constrainedError);
     
-
     angleMotor.set(rotorOutput);
     lastAngle = angle;
+
 
     if (isOpenLoop) {
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
@@ -127,7 +123,6 @@ public class SwerveModule {
     driveController.setD(Constants.Swerve.angleKD);
     driveController.setFF(Constants.Swerve.angleKFF);
     driveMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
-    // driveMotor.burnFlash();
     driveEncoder.setPosition(0.0);
   }
 
@@ -135,7 +130,11 @@ public class SwerveModule {
     return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
   }
 
-
+  public SwerveModulePosition getPosition(){
+    return new SwerveModulePosition(
+      driveEncoder.getPositionConversionFactor(), 
+      getAngle());
+  }
 
   public SwerveModuleState getState() {
     return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
