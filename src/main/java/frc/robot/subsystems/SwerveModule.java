@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -25,25 +24,22 @@ public class SwerveModule {
   public int moduleNumber;
   private Rotation2d lastAngle;
   private Rotation2d angleOffset;
-  
+
   private PID rotorPID;
 
   private CANSparkMax angleMotor;
   private CANSparkMax driveMotor;
 
   private RelativeEncoder driveEncoder;
-  private RelativeEncoder integratedAngleEncoder;
-  private WPI_CANCoder angleEncoder;
+  private CANCoder angleEncoder;
 
   private final SparkMaxPIDController driveController;
-  private final SparkMaxPIDController angleController;
+  //private final SparkMaxPIDController angleController;
 
-  private final SimpleMotorFeedforward feedforward =
-      new SimpleMotorFeedforward(
-          Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
+  private final SimpleMotorFeedforward feedforward = new SimpleMotorFeedforward(
+      Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
 
-          
 
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
@@ -51,13 +47,13 @@ public class SwerveModule {
     angleOffset = moduleConstants.angleOffset;
 
     /* Angle Encoder Config */
-    angleEncoder = new WPI_CANCoder(moduleConstants.cancoderID);
+    angleEncoder = new CANCoder(moduleConstants.cancoderID);
     configAngleEncoder();
 
     /* Angle Motor Config */
     angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
-    integratedAngleEncoder = angleMotor.getEncoder();
-    angleController = angleMotor.getPIDController();
+    //integratedAngleEncoder = angleMotor.getEncoder();
+    //angleController = angleMotor.getPIDController();
     configAngleMotor();
 
     /* Drive Motor Config */
@@ -69,46 +65,53 @@ public class SwerveModule {
     lastAngle = getState().angle;
   }
 
-
-
-
-
-
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-    // Custom optimize command, since default WPILib optimize assumes continuous controller which
+    // Custom optimize command, since default WPILib optimize assumes continuous
+    // controller which
     // REV and CTRE are not
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
-    //desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
-    setAngle(desiredState);
-    setSpeed(desiredState, isOpenLoop);
+    // desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
+
+    Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
+        ? lastAngle
+        : desiredState.angle;
+
+    
+    double error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
+    double constrainedError = MathUtility.constrainAngleDegrees(error);
+    double rotorOutput = rotorPID.calculate(constrainedError);
+    
+
+    angleMotor.set(rotorOutput);
+    lastAngle = angle;
+
+    if (isOpenLoop) {
+      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
+      driveMotor.set(percentOutput);
+    } else {
+      driveController.setReference(
+          desiredState.speedMetersPerSecond,
+          ControlType.kVelocity,
+          0,
+          feedforward.calculate(desiredState.speedMetersPerSecond));
+    }
+
   }
 
-  private void resetToAbsolute() {
-    double absolutePosition = getCanCoder().getDegrees() - angleOffset.getDegrees();
-    integratedAngleEncoder.setPosition(absolutePosition);
-  }
 
   private void configAngleEncoder() {
     angleEncoder.configFactoryDefault();
-    CANCoderUtil.setCANCoderBusUsage(angleEncoder, CCUsage.kMinimal);
+    CANCoderUtil.setCANCoderBusUsage(angleEncoder, CCUsage.kSensorDataOnly);
+    angleEncoder.configMagnetOffset(angleOffset.getDegrees());
     angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
   }
 
   private void configAngleMotor() {
     angleMotor.restoreFactoryDefaults();
-    CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kPositionOnly);
-    angleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
     angleMotor.setInverted(Constants.Swerve.angleInvert);
     angleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
-    integratedAngleEncoder.setPositionConversionFactor(Constants.Swerve.angleConversionFactor);
-    angleController.setP(Constants.Swerve.angleKP);
-    angleController.setI(Constants.Swerve.angleKI);
-    angleController.setD(Constants.Swerve.angleKD);
-    angleController.setFF(Constants.Swerve.angleKFF);
     rotorPID = new PID(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD, 30, 0);
     angleMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
-    //angleMotor.burnFlash();
-    resetToAbsolute();
   }
 
   private void configDriveMotor() {
@@ -124,57 +127,15 @@ public class SwerveModule {
     driveController.setD(Constants.Swerve.angleKD);
     driveController.setFF(Constants.Swerve.angleKFF);
     driveMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
-    //driveMotor.burnFlash();
+    // driveMotor.burnFlash();
     driveEncoder.setPosition(0.0);
   }
 
-
-
-
-
-
-  private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
-    if (isOpenLoop) {
-      double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
-      driveMotor.set(percentOutput);
-    } else {
-      driveController.setReference(
-          desiredState.speedMetersPerSecond,
-          ControlType.kVelocity,
-          0,
-          feedforward.calculate(desiredState.speedMetersPerSecond));
-    }
-  }
-
-  private void setAngle(SwerveModuleState desiredState) {
-    // Prevent rotating module if speed is less then 1%. Prevents jittering.
-    Rotation2d angle =
-        (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
-            ? lastAngle
-            : desiredState.angle;
-    double error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
-    double constrainedError = MathUtility.constrainAngleDegrees(error);
-    double rotorOutput = rotorPID.calculate(constrainedError);
-    //angleController.setReference(angle.getDegrees(), ControlType.kPosition);
-    angleMotor.set(rotorOutput);
-    lastAngle = angle;
-  }
-
-
-
-
-
-
-
-
-
-  private Rotation2d getAngle() {
+  public Rotation2d getAngle() {
     return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
   }
 
-  public Rotation2d getCanCoder() {
-    return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
-  }
+
 
   public SwerveModuleState getState() {
     return new SwerveModuleState(driveEncoder.getVelocity(), getAngle());
