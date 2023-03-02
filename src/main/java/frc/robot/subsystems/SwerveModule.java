@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -9,6 +10,8 @@ import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.ChenryLib.MathUtility;
+import frc.ChenryLib.PID;
 import frc.lib.config.SwerveModuleConstants;
 import frc.lib.math.OnboardModuleState;
 import frc.lib.util.CANCoderUtil;
@@ -22,13 +25,15 @@ public class SwerveModule {
   public int moduleNumber;
   private Rotation2d lastAngle;
   private Rotation2d angleOffset;
+  
+  private PID rotorPID;
 
   private CANSparkMax angleMotor;
   private CANSparkMax driveMotor;
 
   private RelativeEncoder driveEncoder;
   private RelativeEncoder integratedAngleEncoder;
-  private CANCoder angleEncoder;
+  private WPI_CANCoder angleEncoder;
 
   private final SparkMaxPIDController driveController;
   private final SparkMaxPIDController angleController;
@@ -37,12 +42,16 @@ public class SwerveModule {
       new SimpleMotorFeedforward(
           Constants.Swerve.driveKS, Constants.Swerve.driveKV, Constants.Swerve.driveKA);
 
+
+          
+
+
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
     angleOffset = moduleConstants.angleOffset;
 
     /* Angle Encoder Config */
-    angleEncoder = new CANCoder(moduleConstants.cancoderID);
+    angleEncoder = new WPI_CANCoder(moduleConstants.cancoderID);
     configAngleEncoder();
 
     /* Angle Motor Config */
@@ -60,11 +69,16 @@ public class SwerveModule {
     lastAngle = getState().angle;
   }
 
+
+
+
+
+
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     // Custom optimize command, since default WPILib optimize assumes continuous controller which
     // REV and CTRE are not
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
-
+    //desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
     setAngle(desiredState);
     setSpeed(desiredState, isOpenLoop);
   }
@@ -91,8 +105,9 @@ public class SwerveModule {
     angleController.setI(Constants.Swerve.angleKI);
     angleController.setD(Constants.Swerve.angleKD);
     angleController.setFF(Constants.Swerve.angleKFF);
+    rotorPID = new PID(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD, 30, 0);
     angleMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
-    angleMotor.burnFlash();
+    //angleMotor.burnFlash();
     resetToAbsolute();
   }
 
@@ -109,9 +124,14 @@ public class SwerveModule {
     driveController.setD(Constants.Swerve.angleKD);
     driveController.setFF(Constants.Swerve.angleKFF);
     driveMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
-    driveMotor.burnFlash();
+    //driveMotor.burnFlash();
     driveEncoder.setPosition(0.0);
   }
+
+
+
+
+
 
   private void setSpeed(SwerveModuleState desiredState, boolean isOpenLoop) {
     if (isOpenLoop) {
@@ -132,13 +152,24 @@ public class SwerveModule {
         (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
             ? lastAngle
             : desiredState.angle;
-
-    angleController.setReference(angle.getDegrees(), ControlType.kPosition);
+    double error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
+    double constrainedError = MathUtility.constrainAngleDegrees(error);
+    double rotorOutput = rotorPID.calculate(constrainedError);
+    //angleController.setReference(angle.getDegrees(), ControlType.kPosition);
+    angleMotor.set(rotorOutput);
     lastAngle = angle;
   }
 
+
+
+
+
+
+
+
+
   private Rotation2d getAngle() {
-    return Rotation2d.fromDegrees(integratedAngleEncoder.getPosition());
+    return Rotation2d.fromDegrees(angleEncoder.getAbsolutePosition());
   }
 
   public Rotation2d getCanCoder() {
