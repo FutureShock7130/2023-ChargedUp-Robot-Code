@@ -16,6 +16,8 @@ public class TeleopSwerve extends CommandBase {
   private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0);
   private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3.0);
 
+  private boolean fieldOriented = false;
+
   public TeleopSwerve(
       Swerve s_Swerve,
       Joystick iJoystick) {
@@ -36,11 +38,13 @@ public class TeleopSwerve extends CommandBase {
     double rotationVal =
         rotationLimiter.calculate(
             MathUtil.applyDeadband(controller.getRawAxis(Constants.JoystickConstants.rightStick_X), Constants.Swerve.stickDeadband));
-
+    
+    if (controller.getRawButtonPressed(Constants.JoystickConstants.btn_X)) fieldOriented = !fieldOriented;
+    
     /* Drive */
     s_Swerve.drive(
         new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
-        rotationVal * Constants.Swerve.maxAngularVelocity, false,
+        rotationVal * Constants.Swerve.maxAngularVelocity, fieldOriented,
         true);
   }
 }

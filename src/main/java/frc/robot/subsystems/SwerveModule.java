@@ -106,7 +106,7 @@ public class SwerveModule {
     angleMotor.restoreFactoryDefaults();
     angleMotor.setInverted(Constants.Swerve.angleInvert);
     angleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
-    rotorPID = new PID(Constants.Swerve.angleKP, Constants.Swerve.angleKI, Constants.Swerve.angleKD, 30, 0);
+    rotorPID = new PID(Constants.Swerve.angleKP, 0, Constants.Swerve.angleKD, 0, 0);
     angleMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
   }
 
@@ -118,10 +118,10 @@ public class SwerveModule {
     driveMotor.setIdleMode(Constants.Swerve.driveNeutralMode);
     driveEncoder.setVelocityConversionFactor(Constants.Swerve.driveConversionVelocityFactor);
     driveEncoder.setPositionConversionFactor(Constants.Swerve.driveConversionPositionFactor);
-    driveController.setP(Constants.Swerve.angleKP);
-    driveController.setI(Constants.Swerve.angleKI);
-    driveController.setD(Constants.Swerve.angleKD);
-    driveController.setFF(Constants.Swerve.angleKFF);
+    driveController.setP(Constants.Swerve.driveKP);
+    driveController.setI(Constants.Swerve.driveKI);
+    driveController.setD(Constants.Swerve.driveKD);
+    driveController.setFF(Constants.Swerve.driveKFF);
     driveMotor.enableVoltageCompensation(Constants.Swerve.voltageComp);
     driveEncoder.setPosition(0.0);
   }
