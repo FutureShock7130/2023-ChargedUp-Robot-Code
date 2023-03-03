@@ -50,6 +50,7 @@ public class SwerveModule {
     /* Angle Encoder Config */
     angleEncoder = new CANCoder(moduleConstants.cancoderID);
     configAngleEncoder();
+    angleEncoder.configMagnetOffset(angleOffset.getDegrees());
 
     /* Angle Motor Config */
     angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);
@@ -98,7 +99,7 @@ public class SwerveModule {
   private void configAngleEncoder() {
     angleEncoder.configFactoryDefault();
     CANCoderUtil.setCANCoderBusUsage(angleEncoder, CCUsage.kSensorDataOnly);
-    angleEncoder.configMagnetOffset(angleOffset.getDegrees());
+
     angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
   }
 
