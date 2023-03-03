@@ -68,18 +68,18 @@ public class SwerveModule {
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     // Custom optimize command, since default WPILib optimize assumes continuous controller which REV and CTRE are not
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
-    // desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
+    //desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
-    Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
+    /*Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
         ? lastAngle
-        : desiredState.angle;
+        : desiredState.angle;*/
 
     double error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
     double constrainedError = MathUtility.constrainAngleDegrees(error);
     double rotorOutput = rotorPID.calculate(constrainedError);
-    
+    //System.out.println(rotorOutput);
     angleMotor.set(rotorOutput);
-    lastAngle = angle;
+    //lastAngle = angle;
 
 
     if (isOpenLoop) {
@@ -98,7 +98,7 @@ public class SwerveModule {
 
   private void configAngleEncoder() {
     angleEncoder.configFactoryDefault();
-    CANCoderUtil.setCANCoderBusUsage(angleEncoder, CCUsage.kSensorDataOnly);
+    CANCoderUtil.setCANCoderBusUsage(angleEncoder, CCUsage.kAll);
 
     angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
   }
