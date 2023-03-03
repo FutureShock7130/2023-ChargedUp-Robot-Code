@@ -139,7 +139,7 @@ public class SwerveModule {
 
   public SwerveModulePosition getPosition(){
     return new SwerveModulePosition(
-      driveEncoder.getPositionConversionFactor(), 
+      driveEncoder.getPosition(), 
       getAngle());
   }
 
