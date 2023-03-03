@@ -68,18 +68,22 @@ public class SwerveModule {
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
     // Custom optimize command, since default WPILib optimize assumes continuous controller which REV and CTRE are not
     desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
+    
+    //wpi's optimize command
     //desiredState = SwerveModuleState.optimize(desiredState, getState().angle);
 
-    /*Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
+    Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.Swerve.maxSpeed * 0.01))
         ? lastAngle
-        : desiredState.angle;*/
+        : desiredState.angle;
+
+    desiredState.angle = angle;
 
     double error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
     double constrainedError = MathUtility.constrainAngleDegrees(error);
     double rotorOutput = rotorPID.calculate(constrainedError);
     //System.out.println(rotorOutput);
     angleMotor.set(rotorOutput);
-    //lastAngle = angle;
+    lastAngle = angle;
 
 
     if (isOpenLoop) {
@@ -105,6 +109,8 @@ public class SwerveModule {
 
   private void configAngleMotor() {
     angleMotor.restoreFactoryDefaults();
+    CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kAll);
+    angleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
     angleMotor.setInverted(Constants.Swerve.angleInvert);
     angleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);
     rotorPID = new PID(Constants.Swerve.angleKP, 0, Constants.Swerve.angleKD, 0, 0);
