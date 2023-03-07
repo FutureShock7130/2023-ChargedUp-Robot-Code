@@ -14,18 +14,22 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.ChenryLib.PID;
+import frc.ChenryLib.SettledUtility;
 import frc.robot.Constants;
 
 public class Superstructure extends SubsystemBase{
     private WPI_TalonFX elbowLeft;
     private WPI_TalonFX elbowRight;
     private CANCoder elbowEncoder;
+    private SettledUtility elbowSU;
 
     private WPI_TalonFX stringboi;
     private CANCoder stringEncoder;
+    private SettledUtility stringSU;
 
     private CANSparkMax rotationboi;
     private RelativeEncoder rotationEncoder;
+    private SettledUtility rotationSU;
 
     private Solenoid squishyboi;
     
@@ -60,6 +64,13 @@ public class Superstructure extends SubsystemBase{
         static double standbyIntake = 0;
     }
 
+
+    enum armStates{
+        intakeStandby,
+        scoreStandby,
+
+    }
+
     Superstructure(){
         elbowLeft = new WPI_TalonFX(Constants.Superstructure.talonLeftPort);
         elbowRight = new WPI_TalonFX(Constants.Superstructure.talonRightPort);
@@ -72,11 +83,6 @@ public class Superstructure extends SubsystemBase{
         rotationEncoder = rotationboi.getEncoder();
 
         squishyboi = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Superstructure.solenoidPort);
-
-        
-
-        
-
     }
     
     @Override
@@ -86,7 +92,7 @@ public class Superstructure extends SubsystemBase{
         
         double rotationError = currentRotationTarget - rotationEncoder.getPosition();
         rotationSet(rotationPID.calculate(rotationError));
-
+        
         double stringError = currentStringTarget - stringEncoder.getPosition();
         stringSet(stringPID.calculate(stringError));
         
@@ -98,12 +104,26 @@ public class Superstructure extends SubsystemBase{
         elbowLeft.set(ControlMode.PercentOutput, value);
     }
 
+    void elbowSetTarget(double target){
+        currentElbowTarget = target;
+    }
+
     void stringSet(double value){
         stringboi.set(ControlMode.PercentOutput, value);
+    }
+
+    void stringSetTarget(double target){
+        currentStringTarget = target;
     }
 
     void rotationSet (double value){
         rotationboi.set(value);
     }
+
+    void rotationSetTarget (double target){
+        currentRotationTarget = target;
+    }
+
+
 
 }
