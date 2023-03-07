@@ -81,7 +81,6 @@ public class SwerveModule {
     double error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
     double constrainedError = MathUtility.constrainAngleDegrees(error);
     double rotorOutput = rotorPID.calculate(constrainedError);
-    //System.out.println(rotorOutput);
     angleMotor.set(rotorOutput);
     lastAngle = angle;
 

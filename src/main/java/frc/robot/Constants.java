@@ -30,9 +30,24 @@ public final class Constants {
     public static final int btn_RS = 10;
   }
 
+
+  public static final class Superstructure {
+    public static final int talonLeftPort = 1;
+    public static final int talonRightPort = 2;
+    public static final int talonStringPort = 3;
+    public static final int neoRotationPort = 4;
+    public static final int solenoidPort = 5;
+    public static final int elbowCanCoderPort = 6;
+  }
+
+
+
   public static final class Swerve {
     public static final double stickDeadband = 0.05;
-    public static final int pigeonID = 1;
+    public static final int pigeon1 = 1;
+    public static final int pigeon2 = 2;
+    public static final int pigeon3 = 3;
+    public static final int pigeon4 = 4;
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
     /* Drivetrain Constants */

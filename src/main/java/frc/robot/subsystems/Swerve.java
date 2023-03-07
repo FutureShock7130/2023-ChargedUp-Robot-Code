@@ -16,6 +16,9 @@ import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
   private final Pigeon2 gyro;
+  private final Pigeon2 gyro2;
+  private final Pigeon2 gyro3;
+  private final Pigeon2 gyro4;
 
   private SwerveDriveOdometry swerveOdometry;
   private SwerveModule[] mSwerveMods;
@@ -23,7 +26,10 @@ public class Swerve extends SubsystemBase {
   private Field2d field;
 
   public Swerve() {
-    gyro = new Pigeon2(Constants.Swerve.pigeonID);
+    gyro = new Pigeon2(Constants.Swerve.pigeon1);
+    gyro2 = new Pigeon2(Constants.Swerve.pigeon2);
+    gyro3 = new Pigeon2(Constants.Swerve.pigeon3);
+    gyro4 = new Pigeon2(Constants.Swerve.pigeon4);
     gyro.configFactoryDefault();
     zeroGyro();
 
@@ -100,12 +106,15 @@ public class Swerve extends SubsystemBase {
 
   public void zeroGyro() {
     gyro.setYaw(0);
+    gyro2.setYaw(0);
+    gyro3.setYaw(0);
+    gyro4.setYaw(0);
   }
 
   public Rotation2d getYaw() {
-    return (Constants.Swerve.invertGyro)
-        ? Rotation2d.fromDegrees(360 - gyro.getYaw())
-        : Rotation2d.fromDegrees(gyro.getYaw());
+    double averageAngle = gyro.getYaw() + gyro2.getYaw() + gyro3.getYaw() + gyro4.getYaw();
+    averageAngle /= 4;
+    return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - averageAngle) : Rotation2d.fromDegrees(averageAngle);
   }
 
   @Override
