@@ -2,10 +2,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FollowerType;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.Pigeon2;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -43,6 +41,12 @@ public class Superstructure extends SubsystemBase{
     private double currentStringTarget = 0;
     private double currentRotationTarget = 0;
 
+    boolean isIdle = true;
+
+    boolean stringSettled = true;
+    boolean elbowSettled = true;
+    boolean rotationSettled = true;
+
     private static class rotationPos {
         static double standby = 0;
         static double horizontal = 0;
@@ -76,28 +80,52 @@ public class Superstructure extends SubsystemBase{
         elbowRight = new WPI_TalonFX(Constants.Superstructure.talonRightPort);
         elbowRight.follow(elbowLeft, FollowerType.PercentOutput);
         elbowEncoder = new CANCoder(Constants.Superstructure.elbowCanCoderPort);
-        elbowPID = new PID(1, 0, 0, 0, 0);
+        elbowPID = new PID(0.001, 0, 0, 0, 0);
 
+        
         stringboi = new WPI_TalonFX(Constants.Superstructure.talonStringPort);
+        stringPID = new PID(0, 0, 0, 0, 0);
         rotationboi = new CANSparkMax(Constants.Superstructure.neoRotationPort, MotorType.kBrushless);
         rotationEncoder = rotationboi.getEncoder();
+        rotationPID = new PID(0, 0, 0, 0, 0);
 
         squishyboi = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Superstructure.solenoidPort);
     }
     
     @Override
     public void periodic() {
-
-        
-        
-        double rotationError = currentRotationTarget - rotationEncoder.getPosition();
-        rotationSet(rotationPID.calculate(rotationError));
-        
         double stringError = currentStringTarget - stringEncoder.getPosition();
-        stringSet(stringPID.calculate(stringError));
-        
+        double rotationError = currentRotationTarget - rotationEncoder.getPosition();
         double elbowError = currentElbowTarget - elbowEncoder.getAbsolutePosition();
+        updateStates(rotationError, stringError, elbowError);
+        
+
+        rotationSet(rotationPID.calculate(rotationError));
+        stringSet(stringPID.calculate(stringError));
         elbowSet(elbowPID.calculate(elbowError));
+    }
+
+    void scoreStandbySequence(){
+        isIdle = false;
+        rotationSetTarget(rotationPos.standby);
+        stringSetTarget(stringPos.standbyIntake);
+        if (stringSettled) elbowSetTarget(elbowPos.standbyIntake);
+        if (stringSettled && elbowSettled) clamp();
+        elbowSetTarget(elbowPos.standbyPut);
+        isIdle = true;
+    }
+
+    void scoreSequence(){
+        isIdle = false;
+        elbowSetTarget(elbowPos.up);
+        if (elbowSettled) stringSetTarget(stringPos.up);
+        isIdle = true;
+    }
+
+    void updateStates(double rotationError, double stringError, double elbowError){
+        stringSettled = stringSU.isSettled(stringError);
+        rotationSettled = rotationSU.isSettled(rotationError);
+        elbowSettled = elbowSU.isSettled(elbowError);
     }
 
     void elbowSet(double value){
@@ -122,6 +150,14 @@ public class Superstructure extends SubsystemBase{
 
     void rotationSetTarget (double target){
         currentRotationTarget = target;
+    }
+
+    void clamp (){
+        squishyboi.set(true);
+    }
+
+    void unClamp(){
+        squishyboi.set(false);
     }
 
 
