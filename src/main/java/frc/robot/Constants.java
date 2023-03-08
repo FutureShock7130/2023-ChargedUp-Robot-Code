@@ -66,7 +66,7 @@ public final class Constants {
     public static final double openLoopRamp = 0.25;
     public static final double closedLoopRamp = 0.0;
 
-    public static final double driveGearRatio = (6.75 / 1.0); // 6.75:1 (6.7460317460317460317460317460317)
+    public static final double driveGearRatio = (6.7460317460317460317460317460317 / 1.0); // 6.75:1 (6.7460317460317460317460317460317)
     public static final double angleGearRatio = (150.0 / 7.0 / 1.0); // 150/7 : 1
 
     public static final SwerveDriveKinematics swerveKinematics = new SwerveDriveKinematics(
@@ -79,8 +79,8 @@ public final class Constants {
     public static final double voltageComp = 12.0;
 
     /* Swerve Current Limiting */
-    public static final int angleContinuousCurrentLimit = 20; //20
-    public static final int driveContinuousCurrentLimit = 80; //80
+    public static final int angleContinuousCurrentLimit = 30; //20
+    public static final int driveContinuousCurrentLimit = 90; //80
 
     /* Angle Motor PID Values */
     public static final double angleKP = 0.01;
@@ -103,7 +103,7 @@ public final class Constants {
     public static final double angleConversionFactor = 360.0 / angleGearRatio;
 
     /* Swerve Profiling Values */
-    public static final double maxSpeed = 4.2; // meters per second
+    public static final double maxSpeed = 4.1; // meters per second
     public static final double maxAngularVelocity = 13.5; // meters per second
 
     /* Neutral Modes */

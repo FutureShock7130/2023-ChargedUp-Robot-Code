@@ -11,6 +11,7 @@ public class TeleopIntake extends CommandBase {
   private Joystick controller;
 
   private boolean intakeToggle = false;
+  private boolean shooting = false;
   private int currentTilterPosCounter = 3;
   public TeleopIntake(
       Intake iIntake,
@@ -22,15 +23,17 @@ public class TeleopIntake extends CommandBase {
 
   @Override
   public void execute() {
-    if (controller.getRawButton(Constants.JoystickConstants.btn_RS)) intakeToggle = !intakeToggle;
-    if (controller.getRawButton(Constants.JoystickConstants.btn_RB)) {
-      intakeToggle = false;
-      intake.setRollers(-0.8);
-    }
-    if (intakeToggle) intake.setRollers(1);
+    // if (controller.getRawButton(Constants.JoystickConstants.btn_RS)) intakeToggle = !intakeToggle;
+    // if (controller.getRawButton(Constants.JoystickConstants.btn_RB)) {
+    //   intakeToggle = false;
+    //   intake.setRollers(-0.8);
+    // }
+    // if (intakeToggle) intake.setRollers(1);
     
-    
-    
+
+
+
+
     if (controller.getRawButton(Constants.JoystickConstants.btn_LB)){
       currentTilterPosCounter++;
       currentTilterPosCounter = (int) MathUtility.clamp(currentTilterPosCounter, 0, 3);
@@ -41,5 +44,8 @@ public class TeleopIntake extends CommandBase {
       currentTilterPosCounter = (int) MathUtility.clamp(currentTilterPosCounter, 0, 3);
       intake.setTilterPos(currentTilterPosCounter);
     }
+    if (controller.getRawButtonPressed(Constants.JoystickConstants.btn_RB)) shooting = true;
+
+    //timing + mutex and then we turn off the intake, and when the intake is down we automaitcally intake
 }
 }
