@@ -26,5 +26,10 @@ public class MathUtility {
     }
     public static double constrainAngleDegrees(double angle){
     return Math.atan2(Math.sin(angle / 180.0 * 3.14159265358979323846), Math.cos(angle / 180.0 * 3.14159265358979323846)) * 180/3.14159265358979323846;
+    }
+
+    public static double clamp(double value, double min, double max){
+        return Math.min(Math.max(value, min), max);
+    }
 }
-}
+

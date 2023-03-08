@@ -31,12 +31,19 @@ public final class Constants {
   }
 
 
+  public static final class intake {
+    public static final int leftMotorPort = 61;
+    public static final int rightMotorPort = 62;
+    public static final int tilterPort = 1;
+    public static final int solenoidPort = 0;
+  }
+
   public static final class Superstructure {
     public static final int talonLeftPort = 1;
     public static final int talonRightPort = 2;
     public static final int talonStringPort = 3;
     public static final int neoRotationPort = 4;
-    public static final int solenoidPort = 5;
+    public static final int solenoidPort = 1;
     public static final int elbowCanCoderPort = 6;
   }
 
@@ -123,8 +130,8 @@ public final class Constants {
 
     /* Front Right Module - Module 1 */
     public static final class Mod1 {
-      public static final int driveMotorID = 21;
-      public static final int angleMotorID = 22;
+      public static final int driveMotorID = 22;
+      public static final int angleMotorID = 21;
       public static final int canCoderID = 2;
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-6.2);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
