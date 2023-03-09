@@ -10,107 +10,106 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
 import frc.ChenryLib.SettledUtility;
 import frc.robot.Constants;
 
-public class Upper extends SubsystemBase{
-    private WPI_TalonFX elbowLeft;
-    private WPI_TalonFX elbowRight;
-    private CANCoder elbowEncoder;
-    private SettledUtility elbowSU;
+public class Upper extends SubsystemBase {
+    public static Object states;
+    private WPI_TalonFX elbowLeft = new WPI_TalonFX(Constants.Superstructure.talonLeftPort);
+    private WPI_TalonFX elbowRight = new WPI_TalonFX(Constants.Superstructure.talonRightPort);;
+    private CANCoder elbowEncoder = new CANCoder(Constants.Superstructure.elbowCanCoderPort);
+    private SettledUtility elbowSU = new SettledUtility(100, 5, 2);
 
-    private WPI_TalonFX stringboi;
-    private CANCoder stringEncoder;
-    private SettledUtility stringSU;
+    private WPI_TalonFX stringboi = new WPI_TalonFX(Constants.Superstructure.talonStringPort);
+    private CANCoder stringEncoder = new CANCoder(Constants.Superstructure.stringCanCoderPort);
+    private SettledUtility stringSU = new SettledUtility(100, 50, 50);
 
+    private Solenoid squishyboi = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Superstructure.solenoidPort);
 
-    private Solenoid squishyboi;
-    
+    private PID elbowPID = new PID(0, 0, 0, 0, 0);
+    private PID stringPID = new PID(0, 0, 0, 0, 0);
 
-    private PID elbowPID;
-    private PID stringPID;
-
-
-    private double currentElbowTarget = 0;
-    private double currentStringTarget = 0;
+    private double currentElbowTarget = elbowPos.down;
+    private double currentStringTarget = stringPos.down;
 
     boolean stringSettled = true;
     boolean elbowSettled = true;
 
+    boolean elbowIsOutside = false;
 
-    private static class elbowPos{
+    private static class elbowPos {
         static double mid = 0;
         static double high = 0;
         static double down = 0;
         static double human = 0;
         static double placingOffset = 0;
+        static double outside = 0;
     }
 
-    private static class stringPos{
+    private static class stringPos {
         static double high = 0;
         static double mid = 0;
         static double down = 0;
         static double human = 0;
     }
 
-    enum States {
+    public static enum States {
         placing,
         human,
         coneHigh,
         coneMid,
-        standby,
+        down,
     }
 
+    States state = States.down;
+    States lastState = States.down;
 
-    States state = States.standby;
-
-
-    Upper(){
-        elbowLeft = new WPI_TalonFX(Constants.Superstructure.talonLeftPort);
-        elbowRight = new WPI_TalonFX(Constants.Superstructure.talonRightPort);
+    public Upper() {
         elbowRight.follow(elbowLeft, FollowerType.PercentOutput);
 
-        elbowEncoder = new CANCoder(Constants.Superstructure.elbowCanCoderPort);
         elbowEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
         elbowEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
-        //can add invert
+        // can add invert
 
-        elbowPID = new PID(0.0001, 0, 0, 0, 0);
-        
-        stringboi = new WPI_TalonFX(Constants.Superstructure.talonStringPort);
-        stringPID = new PID(0, 0, 0, 0, 0);
-
-
-        squishyboi = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Superstructure.solenoidPort);
+        stringEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
     }
-    
+
     @Override
     public void periodic() {
         double stringError = currentStringTarget - stringEncoder.getPosition();
         double elbowError = currentElbowTarget - elbowEncoder.getAbsolutePosition();
         
         switch (state){
-            case standby:
+            case down:
                 setStringTarget(stringPos.down);
+                stringError = currentStringTarget - stringEncoder.getPosition();
+                elbowError = currentElbowTarget - elbowEncoder.getAbsolutePosition();
+                updateStates(stringError, elbowError);
                 if (stringSettled) setElbowTarget(elbowPos.down);;
                 break;
             case coneHigh:
                 setElbowTarget(elbowPos.high);
-                if (elbowSettled) setStringTarget(stringPos.high);
+                updateStates(stringError, elbowError);
+                if (elbowIsOutside) setStringTarget(stringPos.high);
                 break;
             case coneMid:
                 setElbowTarget(elbowPos.mid);
-                if (elbowSettled) setStringTarget(stringPos.mid);
+                updateStates(stringError, elbowError);
+                if (elbowIsOutside) setStringTarget(stringPos.mid);
                 break;
             case human:
                 setElbowTarget(elbowPos.human);
-                setStringTarget(stringPos.human);
+                updateStates(stringError, elbowError);
+                if (elbowIsOutside) setStringTarget(stringPos.human);
                 break;
             case placing:
                 setElbowTarget(currentElbowTarget + elbowPos.placingOffset);
                 break;
         }
+
+        lastState = state;
 
 
         updateStates(stringError, elbowError);
@@ -121,36 +120,43 @@ public class Upper extends SubsystemBase{
         //elbowSet(elbowPID.calculate(elbowError));
     }
 
-
-    void updateStates(double stringError, double elbowError){
-        stringSettled = stringSU.isSettled(stringError);
-        elbowSettled = elbowSU.isSettled(elbowError);
+    public void setStates (States istate){
+        state = istate;
     }
 
-    void elbowSet(double value){
+    void updateStates(double stringError, double elbowError) {
+        stringSettled = stringSU.isSettled(stringError);
+        elbowSettled = elbowSU.isSettled(elbowError);
+        if (elbowEncoder.getAbsolutePosition() > elbowPos.outside)
+            elbowIsOutside = true;
+        else
+            elbowIsOutside = false;
+    }
+
+    void elbowSet(double value) {
         elbowLeft.set(ControlMode.PercentOutput, value);
     }
 
-    void setElbowTarget(double target){
+    void setElbowTarget(double target) {
         currentElbowTarget = target;
     }
 
-    void stringSet(double value){
+    void stringSet(double value) {
         stringboi.set(ControlMode.PercentOutput, value);
     }
 
-    void setStringTarget(double target){
+    void setStringTarget(double target) {
         currentStringTarget = target;
     }
 
-    void clamp (){
+    void clamp() {
         squishyboi.set(true);
     }
 
-    void unClamp(){
+    void unClamp() {
         squishyboi.set(false);
     }
 
-
+    
 
 }

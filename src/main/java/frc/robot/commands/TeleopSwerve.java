@@ -40,7 +40,6 @@ public class TeleopSwerve extends CommandBase {
         rotationLimiter.calculate(
             MathUtil.applyDeadband(controller.getRawAxis(Constants.JoystickConstants.rightStick_X) * 0.8, Constants.Swerve.stickDeadband));
     
-            System.out.println(translationVal);
     if (controller.getRawButtonPressed(Constants.JoystickConstants.btn_X)) fieldOriented = !fieldOriented;
     
 

@@ -45,6 +45,7 @@ public final class Constants {
     public static final int neoRotationPort = 4;
     public static final int solenoidPort = 1;
     public static final int elbowCanCoderPort = 6;
+    public static final int stringCanCoderPort = 7;
   }
 
 
