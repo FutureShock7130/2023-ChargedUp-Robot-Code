@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
 import frc.ChenryLib.SettledUtility;
 import frc.robot.Constants;
@@ -116,8 +115,8 @@ public class Upper extends SubsystemBase {
         SmartDashboard.putNumber("elbow abs pos", elbowEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("string enc pos", stringEncoder.getPosition());
 
-        //stringSet(stringPID.calculate(stringError));
-        //elbowSet(elbowPID.calculate(elbowError));
+        stringSet(stringPID.calculate(stringError));
+        elbowSet(elbowPID.calculate(elbowError));
     }
 
     public void setStates (States istate){
@@ -134,7 +133,7 @@ public class Upper extends SubsystemBase {
     }
 
     void elbowSet(double value) {
-        elbowLeft.set(ControlMode.PercentOutput, value);
+        //elbowLeft.set(ControlMode.PercentOutput, value);
     }
 
     void setElbowTarget(double target) {
@@ -142,7 +141,7 @@ public class Upper extends SubsystemBase {
     }
 
     void stringSet(double value) {
-        stringboi.set(ControlMode.PercentOutput, value);
+        //stringboi.set(ControlMode.PercentOutput, value);
     }
 
     void setStringTarget(double target) {
@@ -156,7 +155,4 @@ public class Upper extends SubsystemBase {
     void unClamp() {
         squishyboi.set(false);
     }
-
-    
-
 }
