@@ -58,8 +58,8 @@ public final class Constants {
     public static final boolean invertGyro = false; // Always ensure Gyro is CCW+ CW-
 
     /* Drivetrain Constants */
-    public static final double trackWidth = 0.577596; //meters
-    public static final double wheelBase = 0.577596; //meters
+    public static final double trackWidth = 0.576; //meters
+    public static final double wheelBase = 0.576; //meters
     public static final double wheelDiameter = Units.inchesToMeters(4.0);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
 
@@ -108,7 +108,7 @@ public final class Constants {
 
     /* Neutral Modes */
     public static final IdleMode angleNeutralMode = IdleMode.kBrake;
-    public static final IdleMode driveNeutralMode = IdleMode.kCoast;
+    public static final IdleMode driveNeutralMode = IdleMode.kBrake;
 
     /* Motor Inverts */
     public static final boolean driveInvert = false;
@@ -130,8 +130,8 @@ public final class Constants {
 
     /* Front Right Module - Module 1 */
     public static final class Mod1 {
-      public static final int driveMotorID = 22;
-      public static final int angleMotorID = 21;
+      public static final int driveMotorID = 21;
+      public static final int angleMotorID = 22;
       public static final int canCoderID = 2;
       public static final Rotation2d angleOffset = Rotation2d.fromDegrees(-6.2);
       public static final SwerveModuleConstants constants = new SwerveModuleConstants(driveMotorID, angleMotorID,
