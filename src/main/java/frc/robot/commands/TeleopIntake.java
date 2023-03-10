@@ -1,9 +1,12 @@
 package frc.robot.commands;
 
+import java.lang.invoke.ConstantBootstraps;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.ChenryLib.MathUtility;
 import frc.robot.Constants;
+import frc.robot.Constants.intake;
 import frc.robot.subsystems.Intake;
 
 public class TeleopIntake extends CommandBase {
@@ -48,9 +51,14 @@ public class TeleopIntake extends CommandBase {
     // if (controller.getRawButtonPressed(Constants.JoystickConstants.btn_RB)) intake.shoot();
 
 
-        if (operator.getRawButton(Constants.JoystickConstants.btn_Y)) intake.setRollers(0.5);
-        if (operator.getRawButton(Constants.JoystickConstants.btn_A)) intake.setRollers(-0.5);
+        if (operator.getRawButton(Constants.JoystickConstants.btn_Y)) intake.setRollers(0.3);
+        else if (operator.getRawButton(Constants.JoystickConstants.btn_A)) intake.setRollers(-0.55);
+        else if (operator.getRawButton(Constants.JoystickConstants.btn_B)) intake.setRollers(-0.35);
         else intake.setRollers(0);
+
+        intake.tilterSet(operator.getRawAxis(Constants.JoystickConstants.rightStick_Y) * 0.3);
+
+      
     //timing + mutex and then we turn off the intake, and when the intake is down we automaitcally intake
 }
 }

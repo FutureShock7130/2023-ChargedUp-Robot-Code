@@ -21,10 +21,10 @@ public class Intake extends SubsystemBase{
     private CANSparkMax rightIntake = new CANSparkMax(Constants.intake.rightMotorPort, MotorType.kBrushless);
     private Solenoid intakeClamp = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.intake.solenoidPort);
 
-    private WPI_TalonFX tilter = new WPI_TalonFX(Constants.intake.tilterPort);
+    private WPI_TalonFX tilter = new WPI_TalonFX(Constants.intake.tilterPort, "7130");
     private PID tilterPID = new PID(0.000001, 0, 0, 0, 0);
     private double currentTilterTarget;
-    private DigitalInput limitSwitch = new DigitalInput(0);
+    private DigitalInput limitSwitch = new DigitalInput(1);
 
     private double lastTime;
     private double elapsedTime = 0;
@@ -35,16 +35,21 @@ public class Intake extends SubsystemBase{
     private int lastPosIndex = 3;
     private double intakeSpeed = 0;
     private boolean shoot = false;
+
+
     static class tilterPos{
         public static double up = 0;
-        public static double down = -90;
-        public static double third = -45;
-        public static double second = -60;
+        public static double down = -40000;
+        public static double second = -24000;
     }
 
-    static enum States {
-
+    static enum ShootMode {
+        mid,
+        high,
+        full,
     }
+
+    ShootMode mode = ShootMode.high;
 
     public Intake(){
         rightIntake.setInverted(true);
@@ -57,13 +62,25 @@ public class Intake extends SubsystemBase{
         double dt = currentTime - lastTime;
   
         if (posIndex == 0 && !shoot){
-            intakeSpeed = 0.8;
+            intakeSpeed = 0.5;
         }
         if (posIndex == 1 && shoot){
             intakeSpeed = 0.2;
             elapsedTime += dt;
-            if (elapsedTime >= 0.1) intakeSpeed = -0.5;
-            if (elapsedTime >= 0.5){
+            if (elapsedTime >= 0.1) {
+                switch (mode){
+                    case high:
+                        intakeSpeed = -0.55;
+                        break;
+                    case mid:
+                        intakeSpeed = -0.35;
+                        break;
+                    case full:
+                        intakeSpeed = -1;
+                        break;
+                }
+            }
+            if (elapsedTime >= 1){
                 shoot = false;
                 elapsedTime = 0;
             } 
@@ -76,16 +93,36 @@ public class Intake extends SubsystemBase{
         if (lastPosIndex == 0 && posIndex != 0){
             clamp();
         }
-        if (isClampped) intakeClamp.set(true);
-        if (!isClampped) intakeClamp.set(false);
+        if (isClampped) intakeClamp.set(false);
+        if (!isClampped) intakeClamp.set(true);
         //setRollers(intakeSpeed);
         double tilterError = currentTilterTarget - tilter.getSelectedSensorPosition();
-        //tilter.set(ControlMode.PercentOutput, tilterPID.calculate(tilterError));
+        double out = tilterPID.calculate(tilterError);
+        out = MathUtility.clamp(out, -1, 1);
+        //tilter.set(tilterPID.calculate(tilterError));
         
+        if (currentTilterTarget == tilterPos.up){
+            currentTilterTarget = 0;
+        }
+        if (limitSwitch.get()){
+            tilter.setSelectedSensorPosition(0);
+        }
         lastTime = currentTime;
         lastPosIndex = posIndex;
+        SmartDashboard.putBoolean("tileter limit", limitSwitch.get());
         SmartDashboard.putNumber("tilterPos", tilter.getSelectedSensorPosition());
         SmartDashboard.putNumber("tilterError", tilterError);
+        SmartDashboard.putNumber("tilter out ", tilterPID.calculate(tilterError));
+    }
+
+    public void tilterSet (double speed){
+        speed = MathUtility.clamp(speed, -1, 1);
+        if (limitSwitch.get() && speed > 0) {
+            tilter.set(0);
+        }
+        else tilter.set(speed);
+        
+        
     }
 
     public void setTilterTarget(double target){
@@ -93,7 +130,7 @@ public class Intake extends SubsystemBase{
     }
 
     public void setTilterPos(int iposIndex){
-        posIndex = (int) MathUtility.clamp(iposIndex, 0, 3);
+        posIndex = (int) MathUtility.clamp(iposIndex, 0, 2);
         if (!isClampped) return;
         switch (posIndex){
             case 0: {
@@ -103,15 +140,13 @@ public class Intake extends SubsystemBase{
                 setTilterTarget(tilterPos.second);
             }
             case 2: {
-                setTilterTarget(tilterPos.third);
-            }
-            case 3: {
                 setTilterTarget(tilterPos.up);
             }
         }
     }
 
     public void setRollers(double speed){
+        speed = MathUtility.clamp(speed, -1, 1);
         leftIntake.set(speed);
         rightIntake.set(speed);
     }

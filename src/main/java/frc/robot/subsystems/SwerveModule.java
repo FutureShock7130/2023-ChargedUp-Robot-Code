@@ -47,7 +47,7 @@ public class SwerveModule {
     angleOffset = moduleConstants.angleOffset;
 
     /* Angle Encoder Config */
-    angleEncoder = new CANCoder(moduleConstants.cancoderID);
+    angleEncoder = new CANCoder(moduleConstants.cancoderID, "7130");
     configAngleEncoder();
     angleEncoder.configMagnetOffset(angleOffset.getDegrees());
 
@@ -76,12 +76,14 @@ public class SwerveModule {
     double error = getState().angle.getDegrees() - desiredState.angle.getDegrees();
     double constrainedError = MathUtility.constrainAngleDegrees(error);
     double rotorOutput = rotorPID.calculate(constrainedError);
+    rotorOutput = MathUtility.clamp(rotorOutput, -1, 1);
     angleMotor.set(rotorOutput);
     lastAngle = angle;
 
 
     if (isOpenLoop) {
       double percentOutput = desiredState.speedMetersPerSecond / Constants.Swerve.maxSpeed;
+      percentOutput = MathUtility.clamp(percentOutput, -1, 1);
       driveMotor.set(percentOutput);
     } else {
       driveController.setReference(

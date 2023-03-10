@@ -9,24 +9,25 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
 import frc.ChenryLib.SettledUtility;
 import frc.robot.Constants;
 
 public class Upper extends SubsystemBase {
     public static Object states;
-    private WPI_TalonFX elbowLeft = new WPI_TalonFX(Constants.Superstructure.talonLeftPort);
-    private WPI_TalonFX elbowRight = new WPI_TalonFX(Constants.Superstructure.talonRightPort);;
-    private CANCoder elbowEncoder = new CANCoder(Constants.Superstructure.elbowCanCoderPort);
+    private WPI_TalonFX elbowLeft = new WPI_TalonFX(Constants.Superstructure.talonLeftPort, "7130");
+    private WPI_TalonFX elbowRight = new WPI_TalonFX(Constants.Superstructure.talonRightPort, "7130");;
+    private CANCoder elbowEncoder = new CANCoder(Constants.Superstructure.elbowCanCoderPort, "7130");
     private SettledUtility elbowSU = new SettledUtility(100, 5, 2);
 
-    private WPI_TalonFX stringboi = new WPI_TalonFX(Constants.Superstructure.talonStringPort);
-    private CANCoder stringEncoder = new CANCoder(Constants.Superstructure.stringCanCoderPort);
+    private WPI_TalonFX stringboi = new WPI_TalonFX(Constants.Superstructure.talonStringPort, "7130");
+    private CANCoder stringEncoder = new CANCoder(Constants.Superstructure.stringCanCoderPort, "7130");
     private SettledUtility stringSU = new SettledUtility(100, 50, 50);
 
     private Solenoid squishyboi = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Superstructure.solenoidPort);
 
-    private PID elbowPID = new PID(0.05, 0, 0.02, 0, 0);
+    private PID elbowPID = new PID(0.04, 0, 0.01, 0, 0);
     private PID stringPID = new PID(0.01, 0, 0, 0, 0);
 
     private double currentElbowTarget = elbowPos.down;
@@ -124,7 +125,7 @@ public class Upper extends SubsystemBase {
         SmartDashboard.putBoolean("sting settled", stringSettled);
         SmartDashboard.putBoolean("elbow is outside ", elbowIsOutside);
         //stringSet(stringPID.calculate(stringError));
-        //elbowSet(elbowPID.calculate(elbowError));
+        elbowSet(elbowPID.calculate(elbowError));
     }
 
     public void setStates (States istate){
@@ -144,6 +145,7 @@ public class Upper extends SubsystemBase {
     }
 
     public void elbowSet(double value) {
+        value = MathUtility.clamp(value, -1, 1);
         elbowLeft.set(value);
     }
 
@@ -152,6 +154,7 @@ public class Upper extends SubsystemBase {
     }
 
     public void stringSet(double value) {
+        value = MathUtility.clamp(value, -1, 1);
         if (stringEncoder.getPosition() > 2100 && value > 0){
             stringboi.set(0);
         }
