@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FollowerType;
+import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -27,8 +26,8 @@ public class Upper extends SubsystemBase {
 
     private Solenoid squishyboi = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Superstructure.solenoidPort);
 
-    private PID elbowPID = new PID(0, 0, 0, 0, 0);
-    private PID stringPID = new PID(0, 0, 0, 0, 0);
+    private PID elbowPID = new PID(0.05, 0, 0.02, 0, 0);
+    private PID stringPID = new PID(0.01, 0, 0, 0, 0);
 
     private double currentElbowTarget = elbowPos.down;
     private double currentStringTarget = stringPos.down;
@@ -37,21 +36,22 @@ public class Upper extends SubsystemBase {
     boolean elbowSettled = true;
 
     boolean elbowIsOutside = false;
+    boolean stringIsInside = true;
 
     private static class elbowPos {
-        static double mid = 0;
-        static double high = 0;
-        static double down = 0;
-        static double human = 0;
-        static double placingOffset = 0;
-        static double outside = 0;
+        static double mid = 71;
+        static double high = 57;
+        static double down = 155;
+        static double human = 60;
+        static double placingOffset = -5;
+        static double outside = 75;
     }
 
     private static class stringPos {
-        static double high = 0;
-        static double mid = 0;
+        static double high = 2100;
+        static double mid = 460;
         static double down = 0;
-        static double human = 0;
+        static double human = 1900;
     }
 
     public static enum States {
@@ -66,13 +66,18 @@ public class Upper extends SubsystemBase {
     States lastState = States.down;
 
     public Upper() {
-        elbowRight.follow(elbowLeft, FollowerType.PercentOutput);
+        elbowLeft.setInverted(true);
+        elbowRight.follow(elbowLeft);
+        elbowRight.setInverted(TalonFXInvertType.OpposeMaster);
 
         elbowEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
         elbowEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
-        // can add invert
-
-        stringEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
+        elbowEncoder.configMagnetOffset(50);
+        // can add invert if needed
+        //stringboi.setInverted(true);
+        stringEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToZero);
+        stringEncoder.setPosition(0);
+        stringEncoder.configSensorDirection(true);
     }
 
     @Override
@@ -83,10 +88,8 @@ public class Upper extends SubsystemBase {
         switch (state){
             case down:
                 setStringTarget(stringPos.down);
-                stringError = currentStringTarget - stringEncoder.getPosition();
-                elbowError = currentElbowTarget - elbowEncoder.getAbsolutePosition();
                 updateStates(stringError, elbowError);
-                if (stringSettled) setElbowTarget(elbowPos.down);;
+                if (stringIsInside) setElbowTarget(elbowPos.down);;
                 break;
             case coneHigh:
                 setElbowTarget(elbowPos.high);
@@ -114,9 +117,14 @@ public class Upper extends SubsystemBase {
         updateStates(stringError, elbowError);
         SmartDashboard.putNumber("elbow abs pos", elbowEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("string enc pos", stringEncoder.getPosition());
-
-        stringSet(stringPID.calculate(stringError));
-        elbowSet(elbowPID.calculate(elbowError));
+        SmartDashboard.putNumber("elbow error ", elbowError);
+        SmartDashboard.putNumber("elbow out ", elbowPID.calculate(elbowError));
+        SmartDashboard.putNumber("string error", stringError);
+        SmartDashboard.putNumber("string out ", stringPID.calculate(stringError));
+        SmartDashboard.putBoolean("sting settled", stringSettled);
+        SmartDashboard.putBoolean("elbow is outside ", elbowIsOutside);
+        //stringSet(stringPID.calculate(stringError));
+        //elbowSet(elbowPID.calculate(elbowError));
     }
 
     public void setStates (States istate){
@@ -126,22 +134,34 @@ public class Upper extends SubsystemBase {
     void updateStates(double stringError, double elbowError) {
         stringSettled = stringSU.isSettled(stringError);
         elbowSettled = elbowSU.isSettled(elbowError);
-        if (elbowEncoder.getAbsolutePosition() > elbowPos.outside)
-            elbowIsOutside = true;
-        else
-            elbowIsOutside = false;
+        
+        if (elbowEncoder.getAbsolutePosition() < elbowPos.outside) elbowIsOutside = true;
+        else elbowIsOutside = false;
+        
+        if (stringEncoder.getPosition() < 50) stringIsInside = true;
+        else stringIsInside = false;
+        
     }
 
-    void elbowSet(double value) {
-        //elbowLeft.set(ControlMode.PercentOutput, value);
+    public void elbowSet(double value) {
+        elbowLeft.set(value);
     }
 
     void setElbowTarget(double target) {
         currentElbowTarget = target;
     }
 
-    void stringSet(double value) {
-        //stringboi.set(ControlMode.PercentOutput, value);
+    public void stringSet(double value) {
+        if (stringEncoder.getPosition() > 2100 && value > 0){
+            stringboi.set(0);
+        }
+        else if (stringEncoder.getPosition() < -5 && value < 0){
+            stringboi.set(0);
+        }
+        else {
+            stringboi.set(value);
+        }
+        
     }
 
     void setStringTarget(double target) {

@@ -95,13 +95,13 @@ public class SwerveModule {
 
   private void configAngleEncoder() {
     angleEncoder.configFactoryDefault();
-    CANCoderUtil.setCANCoderBusUsage(angleEncoder, CCUsage.kAll);
+    CANCoderUtil.setCANCoderBusUsage(angleEncoder, CCUsage.kSensorDataOnly);
     angleEncoder.configAllSettings(Robot.ctreConfigs.swerveCanCoderConfig);
   }
 
   private void configAngleMotor() {
     angleMotor.restoreFactoryDefaults();
-    CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kAll);
+    CANSparkMaxUtil.setCANSparkMaxBusUsage(angleMotor, Usage.kVelocityOnly);
     angleMotor.setSmartCurrentLimit(Constants.Swerve.angleContinuousCurrentLimit);
     angleMotor.setInverted(Constants.Swerve.angleInvert);
     angleMotor.setIdleMode(Constants.Swerve.angleNeutralMode);

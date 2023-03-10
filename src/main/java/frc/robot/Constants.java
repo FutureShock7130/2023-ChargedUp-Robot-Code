@@ -39,13 +39,12 @@ public final class Constants {
   }
 
   public static final class Superstructure {
-    public static final int talonLeftPort = 1;
-    public static final int talonRightPort = 2;
-    public static final int talonStringPort = 3;
-    public static final int neoRotationPort = 4;
+    public static final int talonLeftPort = 14;
+    public static final int talonRightPort = 16;
+    public static final int talonStringPort = 17;
     public static final int solenoidPort = 1;
-    public static final int elbowCanCoderPort = 6;
-    public static final int stringCanCoderPort = 7;
+    public static final int elbowCanCoderPort = 5;
+    public static final int stringCanCoderPort = 6;
   }
 
 

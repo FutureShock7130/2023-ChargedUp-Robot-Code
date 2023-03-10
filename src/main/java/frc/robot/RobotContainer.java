@@ -21,6 +21,7 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
   /* Controllers */
   private final Joystick driver = new Joystick(0);
+  private final Joystick operator = new Joystick(1);
 
   /* Drive Controls */
   // private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -35,13 +36,16 @@ public class RobotContainer {
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
-  private final Upper Superstructure = new Upper();
+  //private final Upper Superstructure = new Upper();
+  //private final Intake iIntake = new Intake();
   //private final TeleopSwerve driverSwerve = new TeleopSwerve(s_Swerve, -driver.getRawAxis(translationAxis), driver.getRawAxis(strafeAxis), driver.getRawAxis(rotationAxis), false);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    Superstructure.setDefaultCommand(new TeleopUpper(Superstructure, driver));
+    //iIntake.setDefaultCommand(new TeleopIntake(iIntake, driver, operator));
+    //Superstructure.setDefaultCommand(new TeleopUpper(Superstructure, driver, operator));
     s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver));
+
     // Configure the button bindings
     configureButtonBindings();
   }
