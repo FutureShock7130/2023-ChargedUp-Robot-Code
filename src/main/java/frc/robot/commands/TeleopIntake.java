@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.lang.invoke.ConstantBootstraps;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.ChenryLib.MathUtility;
 import frc.robot.Constants;
@@ -58,7 +59,11 @@ public class TeleopIntake extends CommandBase {
 
         if (operator.getPOV() == 90) intake.clamp();
         if (operator.getPOV() == 270) intake.unClamp();
-        intake.tilterSet(operator.getRawAxis(Constants.JoystickConstants.rightStick_Y) * 0.3);
+        if (operator.getRawAxis(Constants.JoystickConstants.trigger_R) > 0.6) intake.setState(2, false); 
+        if (operator.getRawAxis(Constants.JoystickConstants.trigger_L) > 0.6) intake.setState(1, false);
+        //intake.tilterSet(operator.getRawAxis(Constants.JoystickConstants.rightStick_Y) * 0.3);
+        //SmartDashboard.putNumber("lr axis", operator.getRawAxis(Constants.JoystickConstants.trigger_L));
+        //SmartDashboard.putNumber("rtrigger axis", operator.getRawAxis(Constants.JoystickConstants.trigger_R));
 
       
     //timing + mutex and then we turn off the intake, and when the intake is down we automaitcally intake

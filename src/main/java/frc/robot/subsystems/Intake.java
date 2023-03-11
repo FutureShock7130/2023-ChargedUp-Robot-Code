@@ -22,8 +22,8 @@ public class Intake extends SubsystemBase{
     private Solenoid intakeClamp = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.intake.solenoidPort);
 
     private WPI_TalonFX tilter = new WPI_TalonFX(Constants.intake.tilterPort, "7130");
-    private PID tilterPID = new PID(0.000001, 0, 0, 0, 0);
-    private double currentTilterTarget;
+    private PID tilterPID = new PID(0.0000, 0, 0, 0, 0);
+    private double currentTilterTarget = tilterPos.up;
     private DigitalInput limitSwitch = new DigitalInput(1);
 
     private double lastTime;
@@ -31,16 +31,16 @@ public class Intake extends SubsystemBase{
     
     
     private boolean isClampped = true;
-    private int posIndex = 3;
-    private int lastPosIndex = 3;
+    private int posIndex = 2;
+    private int lastPosIndex = 2;
     private double intakeSpeed = 0;
     private boolean shoot = false;
 
 
     static class tilterPos{
         public static double up = 0;
-        public static double down = -40000;
-        public static double second = -24000;
+        public static double down = -32000;
+        public static double second = -11000;
     }
 
     static enum ShootMode {
@@ -60,6 +60,8 @@ public class Intake extends SubsystemBase{
     public void periodic() {
         double currentTime = Timer.getFPGATimestamp();
         double dt = currentTime - lastTime;
+
+        setTilterPos(posIndex);
   
         if (posIndex == 0 && !shoot){
             intakeSpeed = 0.5;
@@ -86,12 +88,12 @@ public class Intake extends SubsystemBase{
             } 
         }
         if (posIndex != 0 && !shoot) {
-            clamp();
+            //clamp();
             intakeSpeed = 0;
         }
 
         if (lastPosIndex == 0 && posIndex != 0){
-            clamp();
+            //clamp();
         }
         if (isClampped) intakeClamp.set(false);
         if (!isClampped) intakeClamp.set(true);
@@ -99,10 +101,10 @@ public class Intake extends SubsystemBase{
         double tilterError = currentTilterTarget - tilter.getSelectedSensorPosition();
         double out = tilterPID.calculate(tilterError);
         out = MathUtility.clamp(out, -1, 1);
-        //tilter.set(tilterPID.calculate(tilterError));
+        tilterSet(out);
         
         if (currentTilterTarget == tilterPos.up){
-            currentTilterTarget = 0;
+            //currentTilterTarget = 0;
         }
         if (limitSwitch.get()){
             tilter.setSelectedSensorPosition(0);
@@ -112,7 +114,10 @@ public class Intake extends SubsystemBase{
         SmartDashboard.putBoolean("tileter limit", limitSwitch.get());
         SmartDashboard.putNumber("tilterPos", tilter.getSelectedSensorPosition());
         SmartDashboard.putNumber("tilterError", tilterError);
-        SmartDashboard.putNumber("tilter out ", tilterPID.calculate(tilterError));
+        SmartDashboard.putNumber("tilter out ", out);
+        SmartDashboard.putNumber("posindex", posIndex);
+        SmartDashboard.putBoolean("isClamoed", isClampped);
+        SmartDashboard.putNumber("currentTarget", currentTilterTarget);
     }
 
     public void tilterSet (double speed){
@@ -121,26 +126,24 @@ public class Intake extends SubsystemBase{
             tilter.set(0);
         }
         else tilter.set(speed);
-        
-        
     }
 
-    public void setTilterTarget(double target){
-        currentTilterTarget = target;
-    }
 
     public void setTilterPos(int iposIndex){
-        posIndex = (int) MathUtility.clamp(iposIndex, 0, 2);
+        posIndex = MathUtility.clamp(iposIndex, 0, 2);
         if (!isClampped) return;
         switch (posIndex){
             case 0: {
-                setTilterTarget(tilterPos.down);
+                currentTilterTarget = tilterPos.down;
+                break;
             }
             case 1: {
-                setTilterTarget(tilterPos.second);
+                currentTilterTarget = tilterPos.second;
+                break;
             }
             case 2: {
-                setTilterTarget(tilterPos.up);
+                currentTilterTarget = tilterPos.up;
+                break;
             }
         }
     }
@@ -165,7 +168,9 @@ public class Intake extends SubsystemBase{
     }
 
     public void setState(int currentTilterPos, boolean shoot){
-
+        posIndex = currentTilterPos;
+        this.shoot = shoot;
+        setTilterPos(posIndex);
     }
     
 }
