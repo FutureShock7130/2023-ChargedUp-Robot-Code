@@ -75,7 +75,7 @@ public class Upper extends SubsystemBase {
         elbowEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
         elbowEncoder.configMagnetOffset(50);
         // can add invert if needed
-        //stringboi.setInverted(true);
+        stringboi.setInverted(true);
         stringEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToZero);
         stringEncoder.setPosition(0);
         stringEncoder.configSensorDirection(true);
@@ -124,7 +124,7 @@ public class Upper extends SubsystemBase {
         SmartDashboard.putNumber("string out ", stringPID.calculate(stringError));
         SmartDashboard.putBoolean("sting settled", stringSettled);
         SmartDashboard.putBoolean("elbow is outside ", elbowIsOutside);
-        //stringSet(stringPID.calculate(stringError));
+        stringSet(stringPID.calculate(stringError));
         elbowSet(elbowPID.calculate(elbowError));
     }
 

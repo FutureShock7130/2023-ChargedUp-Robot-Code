@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -25,6 +27,8 @@ public class RobotContainer {
   /* Controllers */
   private final Joystick driver = new Joystick(0);
   private final Joystick operator = new Joystick(1);
+
+  UsbCamera intakeCamera = CameraServer.startAutomaticCapture();
 
   /* Drive Controls */
   // private final int translationAxis = XboxController.Axis.kLeftY.value;

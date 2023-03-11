@@ -52,10 +52,12 @@ public class TeleopIntake extends CommandBase {
 
 
         if (operator.getRawButton(Constants.JoystickConstants.btn_Y)) intake.setRollers(0.3);
-        else if (operator.getRawButton(Constants.JoystickConstants.btn_A)) intake.setRollers(-0.55);
+        else if (operator.getRawButton(Constants.JoystickConstants.btn_A)) intake.setRollers(-0.6);
         else if (operator.getRawButton(Constants.JoystickConstants.btn_B)) intake.setRollers(-0.35);
         else intake.setRollers(0);
 
+        if (operator.getPOV() == 90) intake.clamp();
+        if (operator.getPOV() == 270) intake.unClamp();
         intake.tilterSet(operator.getRawAxis(Constants.JoystickConstants.rightStick_Y) * 0.3);
 
       
