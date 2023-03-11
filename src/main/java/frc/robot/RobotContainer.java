@@ -6,6 +6,9 @@ package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
@@ -73,16 +76,19 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
+
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
+    SwerveModuleState[] swerveModuleStatesstop = Constants.Swerve.swerveKinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, 0));
+    boolean canExit = false;
+    SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(new ChassisSpeeds(1, 0, 0));
+
     return new SequentialCommandGroup(
       //new InstantCommand(() -> iIntake.setRollers(0.1)), 
       //new InstantCommand(() -> Timer.delay(0.5)),
       new InstantCommand(() -> iIntake.setRollers(-0.6)),
-      new InstantCommand(() -> Timer.delay(3)),
-      new InstantCommand(() -> iIntake.setRollers(0))
-      //new Auto(s_Swerve)
-      );
-    //Auto(s_Swerve);
+      new InstantCommand(() -> Timer.delay(2)),
+      new InstantCommand(() -> iIntake.setRollers(0)),
+      new driveForTime(s_Swerve, 4.5));
   }
 }

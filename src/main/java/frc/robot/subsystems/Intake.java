@@ -22,7 +22,7 @@ public class Intake extends SubsystemBase{
     private Solenoid intakeClamp = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.intake.solenoidPort);
 
     private WPI_TalonFX tilter = new WPI_TalonFX(Constants.intake.tilterPort, "7130");
-    private PID tilterPID = new PID(0.0000, 0, 0, 0, 0);
+    private PID tilterPID = new PID(0.00005, 0, 0.00005, 0, 0);
     private double currentTilterTarget = tilterPos.up;
     private DigitalInput limitSwitch = new DigitalInput(1);
 
@@ -61,35 +61,35 @@ public class Intake extends SubsystemBase{
         double currentTime = Timer.getFPGATimestamp();
         double dt = currentTime - lastTime;
 
-        setTilterPos(posIndex);
+        //setTilterPos(posIndex);
   
         if (posIndex == 0 && !shoot){
-            intakeSpeed = 0.5;
+            //intakeSpeed = 0.5;
         }
         if (posIndex == 1 && shoot){
-            intakeSpeed = 0.2;
+            //intakeSpeed = 0.2;
             elapsedTime += dt;
             if (elapsedTime >= 0.1) {
                 switch (mode){
                     case high:
-                        intakeSpeed = -0.55;
+                        //intakeSpeed = -0.55;
                         break;
                     case mid:
-                        intakeSpeed = -0.35;
+                        //intakeSpeed = -0.35;
                         break;
                     case full:
-                        intakeSpeed = -1;
+                        //intakeSpeed = -1;
                         break;
                 }
             }
             if (elapsedTime >= 1){
-                shoot = false;
-                elapsedTime = 0;
+                //shoot = false;
+                //elapsedTime = 0;
             } 
         }
         if (posIndex != 0 && !shoot) {
             //clamp();
-            intakeSpeed = 0;
+            //intakeSpeed = 0;
         }
 
         if (lastPosIndex == 0 && posIndex != 0){
@@ -101,7 +101,8 @@ public class Intake extends SubsystemBase{
         double tilterError = currentTilterTarget - tilter.getSelectedSensorPosition();
         double out = tilterPID.calculate(tilterError);
         out = MathUtility.clamp(out, -1, 1);
-        tilterSet(out);
+        if (tilterError < 2000 && currentTilterTarget == 0) out = 0.02;
+        //tilterSet(out);
         
         if (currentTilterTarget == tilterPos.up){
             //currentTilterTarget = 0;
@@ -116,7 +117,7 @@ public class Intake extends SubsystemBase{
         SmartDashboard.putNumber("tilterError", tilterError);
         SmartDashboard.putNumber("tilter out ", out);
         SmartDashboard.putNumber("posindex", posIndex);
-        SmartDashboard.putBoolean("isClamoed", isClampped);
+        SmartDashboard.putBoolean("isClamped", isClampped);
         SmartDashboard.putNumber("currentTarget", currentTilterTarget);
     }
 
@@ -159,7 +160,7 @@ public class Intake extends SubsystemBase{
     }
 
     public void unClamp(){
-        if (posIndex != 0) return;
+        //if (posIndex != 0) return;
         isClampped = false;
     }
 
