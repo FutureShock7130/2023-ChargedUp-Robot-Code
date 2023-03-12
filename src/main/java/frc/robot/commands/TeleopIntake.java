@@ -60,8 +60,8 @@ public class TeleopIntake extends CommandBase {
 
         if (operator.getPOV() == 90) intake.clamp();
         if (operator.getPOV() == 270) intake.unClamp();
-        if (operator.getRawAxis(Constants.JoystickConstants.trigger_R) > 0.6) intake.clamp();
-        if (operator.getRawAxis(Constants.JoystickConstants.trigger_L) > 0.6) intake.unClamp();
+        if (operator.getRawAxis(Constants.JoystickConstants.trigger_L) > 0.6) intake.clamp();
+        if (operator.getRawAxis(Constants.JoystickConstants.trigger_R) > 0.6) intake.unClamp();
         intake.tilterSet(operator.getRawAxis(Constants.JoystickConstants.rightStick_Y) * 0.3);
         //SmartDashboard.putNumber("lr axis", operator.getRawAxis(Constants.JoystickConstants.trigger_L));
         //SmartDashboard.putNumber("rtrigger axis", operator.getRawAxis(Constants.JoystickConstants.trigger_R));

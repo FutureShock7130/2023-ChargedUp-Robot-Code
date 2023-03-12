@@ -9,9 +9,11 @@ public class driveForTime extends CommandBase {
   private Swerve drive;
   double time; 
   double TotalTime;
-  public driveForTime(Swerve s_Swerve, double timeS) {
+  double x;
+  public driveForTime(Swerve s_Swerve, double timeS, double ix) {
     drive = s_Swerve;
     TotalTime = timeS;
+    x = ix;
     addRequirements(s_Swerve);
   }
 
@@ -22,7 +24,7 @@ public class driveForTime extends CommandBase {
   
   public void execute(){
 
-        drive.drive(new Translation2d(1, 0), 0, false, true);
+        drive.drive(new Translation2d(x, 0), 0, false, true);
         dt = Timer.getFPGATimestamp() - time;
 
   }
