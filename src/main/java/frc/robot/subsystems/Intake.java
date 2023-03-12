@@ -21,7 +21,7 @@ public class Intake extends SubsystemBase{
     private CANSparkMax rightIntake = new CANSparkMax(Constants.intake.rightMotorPort, MotorType.kBrushless);
     private Solenoid intakeClamp = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.intake.solenoidPort);
 
-    private WPI_TalonFX tilter = new WPI_TalonFX(Constants.intake.tilterPort, "7130");
+    private WPI_TalonFX tilter = new WPI_TalonFX(17, "7130");
     private PID tilterPID = new PID(0.00005, 0, 0.00005, 0, 0);
     private double currentTilterTarget = tilterPos.up;
     private DigitalInput limitSwitch = new DigitalInput(1);

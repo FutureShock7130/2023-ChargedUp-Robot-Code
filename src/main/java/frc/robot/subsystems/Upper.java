@@ -43,7 +43,7 @@ public class Upper extends SubsystemBase {
         static double mid = 71;
         static double high = 57;
         static double down = 155;
-        static double human = 60;
+        static double human = 60; //untested 🙌🙌🙌🙌
         static double placingOffset = -5;
         static double outside = 75;
     }
@@ -52,7 +52,7 @@ public class Upper extends SubsystemBase {
         static double high = 2100;
         static double mid = 460;
         static double down = 0;
-        static double human = 1900;
+        static double human = 1900; //untested 😒😒😒😒😒
     }
 
     public static enum States {
@@ -108,7 +108,7 @@ public class Upper extends SubsystemBase {
                 if (elbowIsOutside) setStringTarget(stringPos.human);
                 break;
             case placing:
-                setElbowTarget(currentElbowTarget + elbowPos.placingOffset);
+                //setElbowTarget(currentElbowTarget + elbowPos.placingOffset); 😢🎶🎶🎶😎😢😢😢
                 break;
         }
 
