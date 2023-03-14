@@ -1,6 +1,6 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -32,7 +32,7 @@ public class SwerveModule {
   private CANSparkMax driveMotor;
 
   private RelativeEncoder driveEncoder;
-  private CANCoder angleEncoder;
+  private WPI_CANCoder angleEncoder;
 
   private final SparkMaxPIDController driveController;
 
@@ -47,7 +47,7 @@ public class SwerveModule {
     angleOffset = moduleConstants.angleOffset;
 
     /* Angle Encoder Config */
-    angleEncoder = new CANCoder(moduleConstants.cancoderID, "7130");
+    angleEncoder = new WPI_CANCoder(moduleConstants.cancoderID, "7130");
     configAngleEncoder();
     angleEncoder.configMagnetOffset(angleOffset.getDegrees());
 

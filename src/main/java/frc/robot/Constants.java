@@ -53,6 +53,7 @@ public final class Constants {
 
   public static final class Swerve {
     public static final double stickDeadband = 0.05;
+    public static final double rotDeadband = 0.1;
     public static final int pigeon1 = 1;
     public static final int pigeon2 = 2;
     public static final int pigeon3 = 3;
