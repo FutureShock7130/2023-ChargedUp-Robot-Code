@@ -52,7 +52,7 @@ public class TeleopIndex extends CommandBase {
     }
     if (jOperator.getRawAxis(JoystickConstants.trigger_L) > 0.4) index.setRollers(-1); // shoot
     index.setTilterPosBySpd(jOperator.getRawAxis(JoystickConstants.leftStick_Y) * 0.3); // tilter
-    if (Math.abs(jOperator.getRawAxis(JoystickConstants.leftStick_Y)) < 0.15) index.stick();
+
   }
 
 }
