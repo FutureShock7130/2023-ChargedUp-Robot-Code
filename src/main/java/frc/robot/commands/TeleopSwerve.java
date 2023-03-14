@@ -43,7 +43,8 @@ public class TeleopSwerve extends CommandBase {
           strafeLimiter.calculate(
               MathUtil.applyDeadband(xJoystick.getLeftX() * 0.4, Constants.Swerve.stickDeadband));
       rotationVal =
-          rotationLimiter.calculate(xJoystick.getRightX() * 0.2);
+          rotationLimiter.calculate(
+              MathUtil.applyDeadband(xJoystick.getRightX() * 0.2, Constants.Swerve.stickDeadband));
     } else {
       translationVal =
           translationLimiter.calculate(
@@ -52,10 +53,12 @@ public class TeleopSwerve extends CommandBase {
           strafeLimiter.calculate(
               MathUtil.applyDeadband(xJoystick.getLeftX(), Constants.Swerve.stickDeadband));
       rotationVal =
-          rotationLimiter.calculate(xJoystick.getRightX() * 0.5);
+          rotationLimiter.calculate(
+              MathUtil.applyDeadband(xJoystick.getRightX() * 0.5, Constants.Swerve.stickDeadband));
     }
     
-    if (xJoystick.getXButton()) fieldOriented = !fieldOriented;    
+    if (xJoystick.getXButton()) fieldOriented = !fieldOriented;  
+    if (xJoystick.getStartButton()) s_Swerve.zeroGyro();
 
     int thing = fieldOriented ? 1 : 0;
     SmartDashboard.putNumber("fo ", thing);

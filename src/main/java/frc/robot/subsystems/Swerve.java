@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.sensors.Pigeon2;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -15,10 +16,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Swerve extends SubsystemBase {
-  private final Pigeon2 gyro1;
-  private final Pigeon2 gyro2;
-  private final Pigeon2 gyro3;
-  private final Pigeon2 gyro4;
+  private final WPI_Pigeon2 gyro1;
+  private final WPI_Pigeon2 gyro2;
+  private final WPI_Pigeon2 gyro3;
+  private final WPI_Pigeon2 gyro4;
 
   private SwerveDriveOdometry swerveOdometry;
   private SwerveModule[] mSwerveMods;
@@ -26,10 +27,10 @@ public class Swerve extends SubsystemBase {
   private Field2d field;
 
   public Swerve() {
-    gyro1 = new Pigeon2(Constants.Swerve.pigeon1, "7130");
-    gyro2 = new Pigeon2(Constants.Swerve.pigeon2, "7130");
-    gyro3 = new Pigeon2(Constants.Swerve.pigeon3, "7130");
-    gyro4 = new Pigeon2(Constants.Swerve.pigeon4, "7130");
+    gyro1 = new WPI_Pigeon2(Constants.Swerve.pigeon1, "7130");
+    gyro2 = new WPI_Pigeon2(Constants.Swerve.pigeon2, "7130");
+    gyro3 = new WPI_Pigeon2(Constants.Swerve.pigeon3, "7130");
+    gyro4 = new WPI_Pigeon2(Constants.Swerve.pigeon4, "7130");
     gyro1.configFactoryDefault();
     gyro2.configFactoryDefault();
     gyro3.configFactoryDefault();
