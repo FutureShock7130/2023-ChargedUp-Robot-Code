@@ -181,7 +181,7 @@ public class Intake extends SubsystemBase{
     }
 
     public void setTilter (double speed){
-        speed = MathUtility.clamp(speed, -1, 1);
+        speed = MathUtility.clamp(speed, -0.3, 0.3);
         if (limitSwitch.get() && speed > 0) {
             tilter.set(0);
         }
