@@ -47,8 +47,9 @@ public class RobotContainer {
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
+  private final Index index = new Index();
   //private final Upper Superstructure = new Upper();
-  private final Intake iIntake = new Intake();
+  // private final Intake iIntake = new Intake();
   //private final TeleopSwerve driverSwerve = new TeleopSwerve(s_Swerve, -driver.getRawAxis(translationAxis), driver.getRawAxis(strafeAxis), driver.getRawAxis(rotationAxis), false);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -56,7 +57,7 @@ public class RobotContainer {
     // iIntake.setDefaultCommand(new TeleopIntake(iIntake, driver, operator));
     //Superstructure.setDefaultCommand(new TeleopUpper(Superstructure, driver, operator));
     s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver));
-
+    index.setDefaultCommand(new TeleopIndex(index, driver, operator));
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -69,7 +70,6 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     /* Driver Buttons */
-    
   }
 
   /**
@@ -87,9 +87,9 @@ public class RobotContainer {
     return new SequentialCommandGroup(
       //new InstantCommand(() -> iIntake.setRollers(0.1)), 
       //new InstantCommand(() -> Timer.delay(0.5)),
-      new InstantCommand(() -> iIntake.setRollers(-0.6)),
-      new InstantCommand(() -> Timer.delay(3)),
-      new InstantCommand(() -> iIntake.setRollers(0)),
+      // new InstantCommand(() -> iIntake.setRollers(-0.6)),
+      // new InstantCommand(() -> Timer.delay(3)),
+      // new InstantCommand(() -> iIntake.setRollers(0)),
       new driveForTime(s_Swerve, 4.5, 1)); //1.65 2
       //new driveForTime(s_Swerve, 1.2, -2));
   }
