@@ -11,12 +11,16 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.lib.vision.*;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Index.indexPos;
+import frc.robot.subsystems.Index.indexStates;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -60,8 +64,7 @@ public class RobotContainer {
     apriltag.setDefaultCommand(new RunCommand(()->{
       Boolean ok = fieldShoot.OKshoot(apriltag.getCameratoTarget());
       SmartDashboard.putBoolean("OKshoot", ok);
-    }
-      , apriltag));
+    }, apriltag));
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -86,10 +89,21 @@ public class RobotContainer {
     // An ExampleCommand will run in autonomous
 
     return new SequentialCommandGroup(
-      //new InstantCommand(() -> iIntake.setRollers(-0.6)),
-      new betterDelay(3),
-      //new InstantCommand(() -> iIntake.setRollers(0)),
-      new driveForTime(s_Swerve, 4.5, 1)); //1.65 2
+      new InstantCommand(()->{
+        index.setState(indexStates.AimTop, true);
+      }),
+      new ParallelCommandGroup(
+        new InstantCommand(()->{
+          index.setState(indexStates.Standby, false);
+        }),
+        new turn(s_Swerve, 0.5)
+      ),
+      new driveForTime(s_Swerve, 4.5, 1), //1.65 2
+      new InstantCommand(()->{
+        index.setState(indexStates.Indexing, false);
+      })
+      );
+
       //new driveForTime(s_Swerve, 1.2, -2));
   }
 }
