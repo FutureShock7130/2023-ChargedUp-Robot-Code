@@ -9,8 +9,11 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.lib.vision.fieldShoot;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -43,6 +46,7 @@ public class RobotContainer {
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
   private final Index index = new Index();
+  private final ApriltagSubsystem apriltag = new ApriltagSubsystem();
   //private final Upper Superstructure = new Upper();
   // private final Intake iIntake = new Intake();
   //private final TeleopSwerve driverSwerve = new TeleopSwerve(s_Swerve, -driver.getRawAxis(translationAxis), driver.getRawAxis(strafeAxis), driver.getRawAxis(rotationAxis), false);
@@ -53,6 +57,11 @@ public class RobotContainer {
     //Superstructure.setDefaultCommand(new TeleopUpper(Superstructure, driver, operator));
     s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver));
     index.setDefaultCommand(new TeleopIndex(index, driver, operator));
+    apriltag.setDefaultCommand(new RunCommand(()->{
+      Boolean ok =  fieldShoot.OKshoot(apriltag.getCameratoTarget());
+      SmartDashboard.putBoolean("OKshoot", ok);
+    }
+      , apriltag));
     // Configure the button bindings
     configureButtonBindings();
   }
