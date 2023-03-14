@@ -47,7 +47,7 @@ public class TeleopIndex extends CommandBase {
     if (jOperator.getPOV() == 180) index.toggleClamp(); // clamp & unclamp
     if (jOperator.getRawButton(JoystickConstants.btn_LB)) index.setRollers(-0.28); // intake
     if (jOperator.getRawAxis(JoystickConstants.trigger_L) > 0.4) index.setRollers(1); // shoot
-     index.setTilterPosBySpd(jOperator.getRawAxis(JoystickConstants.leftStick_Y) * 0.3); // tilter
+    if (jOperator.getRawAxis(JoystickConstants.leftStick_Y) > 0.28) index.setTilterPosBySpd(jOperator.getRawAxis(JoystickConstants.leftStick_Y) * 0.3); // tilter
   }
 
 }
