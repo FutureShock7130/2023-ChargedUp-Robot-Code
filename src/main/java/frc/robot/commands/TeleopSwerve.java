@@ -20,6 +20,10 @@ public class TeleopSwerve extends CommandBase {
 
   private boolean fieldOriented = false;
 
+  private double translationVal;
+  private double strafeVal;
+  private double rotationVal;
+
   public TeleopSwerve(
       Swerve s_Swerve,
       XboxController xController) {
@@ -31,14 +35,25 @@ public class TeleopSwerve extends CommandBase {
   @Override
   public void execute() {
     /* Get Values, Deadband*/
-    double translationVal =
-        translationLimiter.calculate(
-            MathUtil.applyDeadband(xJoystick.getLeftY(), Constants.Swerve.stickDeadband));
-    double strafeVal =
-        strafeLimiter.calculate(
-            MathUtil.applyDeadband(xJoystick.getLeftX(), Constants.Swerve.stickDeadband));
-    double rotationVal =
-        rotationLimiter.calculate(xJoystick.getRightX() * 0.5);
+    if (xJoystick.getRightBumper()) {
+      translationVal =
+          translationLimiter.calculate(
+              MathUtil.applyDeadband(xJoystick.getLeftY() * 0.4, Constants.Swerve.stickDeadband));
+      strafeVal =
+          strafeLimiter.calculate(
+              MathUtil.applyDeadband(xJoystick.getLeftX() * 0.4, Constants.Swerve.stickDeadband));
+      rotationVal =
+          rotationLimiter.calculate(xJoystick.getRightX() * 0.2);
+    } else {
+      translationVal =
+          translationLimiter.calculate(
+              MathUtil.applyDeadband(xJoystick.getLeftY(), Constants.Swerve.stickDeadband));
+      strafeVal =
+          strafeLimiter.calculate(
+              MathUtil.applyDeadband(xJoystick.getLeftX(), Constants.Swerve.stickDeadband));
+      rotationVal =
+          rotationLimiter.calculate(xJoystick.getRightX() * 0.5);
+    }
     
     if (xJoystick.getXButton()) fieldOriented = !fieldOriented;    
 

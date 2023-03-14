@@ -20,6 +20,7 @@ import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
 import frc.robot.Constants;
 import frc.robot.Constants.intake;
+import frc.robot.autos.betterDelay;
 
 public class Index extends SubsystemBase {
 
@@ -98,62 +99,62 @@ public class Index extends SubsystemBase {
     switch (state) {
       case Indexing:
         setTilterPosAuto(indexPos.Down);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         unclamp();
         setRollers(-0.28);
         break;
       case Standby:
         clamp();
         setRollers(0);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         setTilterPosAuto(indexPos.Up);
         break;
       case AimTop:
         clamp();
         setRollers(0);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         setTilterPosAuto(indexPos.Top);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         if (shoot) shoot();
         break;
       case AimMiddle:
         clamp();
         setRollers(0);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         setTilterPosAuto(indexPos.Middle);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         if (shoot) shoot();
         break;
       case AimBottom:
         clamp();
         setRollers(0);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         setTilterPosAuto(indexPos.Bottom);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         if (shoot) shoot();
         break;
       case AimTopCS:
         clamp();
         setRollers(0);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         setTilterPosAuto(indexPos.TopCS);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         if (shoot) shoot();
         break;
       case AimMiddleCS:
         clamp();
         setRollers(0);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         setTilterPosAuto(indexPos.MiddleCS);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         if (shoot) shoot();
         break;
       case AimBottomCS:
         clamp();
         setRollers(0);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         setTilterPosAuto(indexPos.BottomCS);
-        Timer.delay(0.2);
+        new betterDelay(0.2);
         if (shoot) shoot();
         break;
       default:
@@ -169,9 +170,9 @@ public class Index extends SubsystemBase {
 
   public void shoot() {
     setRollers(-0.3);
-    Timer.delay(0.5);
+    new betterDelay(0.5);
     setRollers(1);
-    Timer.delay(1.3);
+    new betterDelay(1.3);
     shoot = false;
   }
 
