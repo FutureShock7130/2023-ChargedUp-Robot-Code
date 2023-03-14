@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.lib.vision.fieldShoot;
+import frc.lib.vision.*;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
@@ -58,7 +58,7 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver));
     index.setDefaultCommand(new TeleopIndex(index, driver, operator));
     apriltag.setDefaultCommand(new RunCommand(()->{
-      Boolean ok =  fieldShoot.OKshoot(apriltag.getCameratoTarget());
+      Boolean ok = fieldShoot.OKshoot(apriltag.getCameratoTarget());
       SmartDashboard.putBoolean("OKshoot", ok);
     }
       , apriltag));
