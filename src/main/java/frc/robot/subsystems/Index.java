@@ -12,7 +12,6 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -115,7 +114,7 @@ public class Index extends SubsystemBase {
         new betterDelay(0.2);
         setTilterPosAuto(indexPos.Top);
         new betterDelay(0.2);
-        if (shoot) shoot();
+        if (shoot) shoot(1);
         break;
       case AimMiddle:
         clamp();
@@ -123,7 +122,7 @@ public class Index extends SubsystemBase {
         new betterDelay(0.2);
         setTilterPosAuto(indexPos.Middle);
         new betterDelay(0.2);
-        if (shoot) shoot();
+        if (shoot) shoot(1);
         break;
       case AimBottom:
         clamp();
@@ -131,7 +130,7 @@ public class Index extends SubsystemBase {
         new betterDelay(0.2);
         setTilterPosAuto(indexPos.Bottom);
         new betterDelay(0.2);
-        if (shoot) shoot();
+        if (shoot) shoot(1);
         break;
       case AimTopCS:
         clamp();
@@ -139,7 +138,7 @@ public class Index extends SubsystemBase {
         new betterDelay(0.2);
         setTilterPosAuto(indexPos.TopCS);
         new betterDelay(0.2);
-        if (shoot) shoot();
+        if (shoot) shoot(1);
         break;
       case AimMiddleCS:
         clamp();
@@ -147,7 +146,7 @@ public class Index extends SubsystemBase {
         new betterDelay(0.2);
         setTilterPosAuto(indexPos.MiddleCS);
         new betterDelay(0.2);
-        if (shoot) shoot();
+        if (shoot) shoot(1);
         break;
       case AimBottomCS:
         clamp();
@@ -155,23 +154,23 @@ public class Index extends SubsystemBase {
         new betterDelay(0.2);
         setTilterPosAuto(indexPos.BottomCS);
         new betterDelay(0.2);
-        if (shoot) shoot();
+        if (shoot) shoot(1);
         break;
       default:
         break;
     }
 
-    if (shoot) shoot();
+    if (shoot) shoot(1);
   }
 
   public void setRollers(double speed) {
     leftRollers.set(MathUtility.clamp(speed, -1, 1));
   }
 
-  public void shoot() {
+  public void shoot(double speed) {
     setRollers(-0.3);
     new betterDelay(0.5);
-    setRollers(1);
+    setRollers(MathUtility.clamp(speed, -1, 1));
     new betterDelay(1.3);
     shoot = false;
   }
