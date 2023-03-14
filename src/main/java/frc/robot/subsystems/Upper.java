@@ -54,7 +54,7 @@ public class Upper extends SubsystemBase {
         static double high = 57;
         static double down = 155;
         static double human = 60; //untested 🙌🙌🙌🙌
-        static double placingOffset = -5;
+        static double placingOffset = -5; //untested🙌🙌🙌🙌
         static double outside = 75;
     }
 

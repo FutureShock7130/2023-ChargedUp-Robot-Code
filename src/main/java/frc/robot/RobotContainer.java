@@ -80,9 +80,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
-    SwerveModuleState[] swerveModuleStatesstop = Constants.Swerve.swerveKinematics.toSwerveModuleStates(new ChassisSpeeds(0, 0, 0));
-    boolean canExit = false;
-    SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(new ChassisSpeeds(1, 0, 0));
 
     return new SequentialCommandGroup(
       //new InstantCommand(() -> iIntake.setRollers(0.1)), 
