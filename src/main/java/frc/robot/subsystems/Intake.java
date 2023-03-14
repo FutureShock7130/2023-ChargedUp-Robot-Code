@@ -142,7 +142,7 @@ public class Intake extends SubsystemBase{
         
         double tilterError = currentTilterTarget - tilter.getSelectedSensorPosition();
         double out = tilterPID.calculate(tilterError);
-        out = MathUtility.clamp(out, -1, 1);
+        out = MathUtility.clamp(out, -0.3, 0.3);
         //setTilter(out);
 
         if (limitSwitch.get()){
