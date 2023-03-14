@@ -72,22 +72,26 @@ public class Intake extends SubsystemBase{
         updateStates();
 
         switch (state){
+            //clamps then sets the target and give low power to intake to ensure the cube dont fly out and presses it against the backboard
             case up:
                 isClampped = true;
                 currentTilterTarget = tilterPos.up;
                 intakeSpeed = 0.05;
                 break;
+            //clamps then sets the target and give low power to intake to ensure the cube dont fly out and presses it against the backboard
             case mid:
                 isClampped = true;
                 currentTilterTarget = tilterPos.mid;
                 intakeSpeed = 0.05;
                 break;
+            //sets target to up and opens the clamp if its in the up position and then gives 0.3 speed to rollers
             case human:
                 currentTilterTarget = tilterPos.up;
                 if (tilterState == TilterStates.up) isClampped = false;
                 else isClampped = true;
                 intakeSpeed = 0.3;
                 break;
+            //sets the target to down and opens the clamp if its in the down position then gives 0.5 speed to rollers
             case down:
                 currentTilterTarget = tilterPos.down;
                 if (tilterState == TilterStates.down) isClampped = false;
@@ -97,9 +101,10 @@ public class Intake extends SubsystemBase{
         }
 
         switch (rollerState){
-            case intake:
+            case intake: //intakeSpeed = intakeSpeed because in diff states the intake speed are diff
                 break;
             case shootHigh:
+                //checks if intake is mid then shoots for 1 second then goes back to intake mode
                 if (tilterState == TilterStates.mid) {
                     intakeSpeed = -0.6;
                     elapsedTime += dt;    
@@ -110,6 +115,7 @@ public class Intake extends SubsystemBase{
                 }
                 break;
             case shootMid:
+                //checks if intake is mid then shoots for 1 second then goes back to intake mode
                 if (tilterState == TilterStates.mid) {
                     intakeSpeed = -0.35;
                     elapsedTime += dt;
@@ -120,6 +126,7 @@ public class Intake extends SubsystemBase{
                 }
                 break;
             case shootFull:
+                //shoots for 1 second then goes back to intake mode
                 intakeSpeed = -1;
                 elapsedTime += dt;
                 if (elapsedTime > 1){
