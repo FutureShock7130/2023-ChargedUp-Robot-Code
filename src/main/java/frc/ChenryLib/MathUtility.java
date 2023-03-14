@@ -1,7 +1,5 @@
 package frc.ChenryLib;
 
-import frc.robot.Constants.intake;
-
 public class MathUtility {
     //private double encTpr = 42;
     
@@ -36,5 +34,9 @@ public class MathUtility {
     public static int clamp(int value, int min, int max){
         return Math.min(Math.max(value, min), max);
     }
+    public static boolean isWithin(double value, double min, double max){
+        return Math.max(min, value) == Math.min(value, max);
+    }
+
 }
 

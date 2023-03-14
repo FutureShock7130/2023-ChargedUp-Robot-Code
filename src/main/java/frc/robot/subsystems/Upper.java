@@ -8,8 +8,6 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.ChenryLib.MathUtility;
@@ -54,7 +52,7 @@ public class Upper extends SubsystemBase {
         static double high = 57;
         static double down = 155;
         static double human = 60; //untested 🙌🙌🙌🙌
-        static double placingOffset = -5; //untested🙌🙌🙌🙌
+        //static double placingOffset = -5; //untested🙌🙌🙌🙌
         static double outside = 75;
     }
 

@@ -9,13 +9,13 @@ import frc.robot.subsystems.Upper.States;
 public class TeleopUpper extends CommandBase {
   private Upper superstructure;
   private Joystick controller;
-  private Joystick upper;
+
 
   public TeleopUpper(Upper iSuperstructure, Joystick iJoystick, Joystick iJoystick2) {
     this.superstructure = iSuperstructure;
     addRequirements(iSuperstructure);
     this.controller = iJoystick;
-    this.upper = iJoystick2;
+
     
   }
 

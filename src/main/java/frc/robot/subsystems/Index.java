@@ -35,7 +35,8 @@ public class Index extends SubsystemBase {
   private boolean shoot = false;
 
   private indexStates state = indexStates.AimTop;
-  private indexPos position = indexPos.Up;
+  // private indexPos position = indexPos.Up;
+  
 
   public enum indexStates {
     Indexing,
@@ -85,14 +86,14 @@ public class Index extends SubsystemBase {
     if (limitSwitch.get()) tilter.setSelectedSensorPosition(0);
     currentTilterPos = tilter.getSelectedSensorPosition();
 
-    if (currentTilterPos == tilterPos.upLimit) position = indexPos.Up;
-    if (currentTilterPos == tilterPos.downlimit) position = indexPos.Down;
-    if (currentTilterPos == tilterPos.topRow) position = indexPos.Top;
-    if (currentTilterPos == tilterPos.middleRow) position = indexPos.Middle;
-    if (currentTilterPos == tilterPos.bottomRow) position = indexPos.Bottom;
-    if (currentTilterPos == tilterPos.topRowCS) position = indexPos.TopCS;
-    if (currentTilterPos == tilterPos.middleRowCS) position = indexPos.MiddleCS;
-    if (currentTilterPos == tilterPos.bottomRowCS) position = indexPos.BottomCS;
+    // if (currentTilterPos == tilterPos.upLimit) position = indexPos.Up;
+    // if (currentTilterPos == tilterPos.downlimit) position = indexPos.Down;
+    // if (currentTilterPos == tilterPos.topRow) position = indexPos.Top;
+    // if (currentTilterPos == tilterPos.middleRow) position = indexPos.Middle;
+    // if (currentTilterPos == tilterPos.bottomRow) position = indexPos.Bottom;
+    // if (currentTilterPos == tilterPos.topRowCS) position = indexPos.TopCS;
+    // if (currentTilterPos == tilterPos.middleRowCS) position = indexPos.MiddleCS;
+    // if (currentTilterPos == tilterPos.bottomRowCS) position = indexPos.BottomCS;
 
     switch (state) {
       case Indexing:

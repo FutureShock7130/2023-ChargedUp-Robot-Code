@@ -15,39 +15,51 @@ import frc.ChenryLib.PID;
 import frc.robot.Constants;
 
 public class Intake extends SubsystemBase{
-    
     private CANSparkMax leftIntake = new CANSparkMax(Constants.intake.leftMotorPort, MotorType.kBrushless);
     private CANSparkMax rightIntake = new CANSparkMax(Constants.intake.rightMotorPort, MotorType.kBrushless);
     private Solenoid intakeClamp = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.intake.solenoidPort);
 
     private WPI_TalonFX tilter = new WPI_TalonFX(17, "7130");
     private PID tilterPID = new PID(0.00005, 0, 0.00005, 0, 0);
-    private double currentTilterTarget = tilterPos.up;
-    private DigitalInput limitSwitch = new DigitalInput(1);
 
-    private double lastTime;
-    private double elapsedTime = 0;
-    
-    private boolean isClampped = true;
-    private int posIndex = 2;
-    private int lastPosIndex = 2;
-    private double intakeSpeed = 0;
-    private boolean shoot = false;
+    private DigitalInput limitSwitch = new DigitalInput(1);
 
 
     private static class tilterPos{
         public static double up = 0;
         public static double down = -32000;
-        public static double second = -11000;
+        public static double mid = -11000;
     }
 
-    static enum ShootMode {
+    public static enum States{
+        human,
+        up,
         mid,
-        high,
-        full,
+        down
     }
 
-    ShootMode mode = ShootMode.high;
+    public static enum TilterStates{
+        up,
+        mid,
+        down,
+        moving,
+    }
+
+    public static enum RollerStates{
+        intake,
+        shootHigh, 
+        shootMid,
+        shootFull
+    }
+
+    private double currentTilterTarget = tilterPos.up;
+    private boolean isClampped = true;
+    TilterStates tilterState = TilterStates.up;
+    double intakeSpeed = 0;
+    States state = States.up;
+    RollerStates rollerState = RollerStates.intake;
+    double elapsedTime = 0;
+    double lastTime = Timer.getFPGATimestamp();
 
     public Intake(){
         rightIntake.setInverted(true);
@@ -56,95 +68,117 @@ public class Intake extends SubsystemBase{
 
     @Override
     public void periodic() {
-        double currentTime = Timer.getFPGATimestamp();
-        double dt = currentTime - lastTime;
+        double dt = Timer.getFPGATimestamp() - lastTime;
+        updateStates();
 
-        //setTilterPos(posIndex);
-  
-        if (posIndex == 0 && !shoot){
-            //intakeSpeed = 0.5;
+        switch (state){
+            case up:
+                isClampped = true;
+                currentTilterTarget = tilterPos.up;
+                intakeSpeed = 0.05;
+                break;
+            case mid:
+                isClampped = true;
+                currentTilterTarget = tilterPos.mid;
+                intakeSpeed = 0.05;
+                break;
+            case human:
+                currentTilterTarget = tilterPos.up;
+                if (tilterState == TilterStates.up) isClampped = false;
+                else isClampped = true;
+                intakeSpeed = 0.3;
+                break;
+            case down:
+                currentTilterTarget = tilterPos.down;
+                if (tilterState == TilterStates.down) isClampped = false;
+                else isClampped = true;
+                intakeSpeed = 0.5;
+                break;
         }
-        if (posIndex == 1 && shoot){
-            //intakeSpeed = 0.2;
-            elapsedTime += dt;
-            if (elapsedTime >= 0.1) {
-                switch (mode){
-                    case high:
-                        //intakeSpeed = -0.55;
-                        break;
-                    case mid:
-                        //intakeSpeed = -0.35;
-                        break;
-                    case full:
-                        //intakeSpeed = -1;
-                        break;
+
+        switch (rollerState){
+            case intake:
+                break;
+            case shootHigh:
+                if (tilterState == TilterStates.mid) {
+                    intakeSpeed = -0.6;
+                    elapsedTime += dt;    
                 }
-            }
-            if (elapsedTime >= 1){
-                //shoot = false;
-                //elapsedTime = 0;
-            } 
-        }
-        if (posIndex != 0 && !shoot) {
-            //clamp();
-            //intakeSpeed = 0;
+                if (elapsedTime > 1){
+                    elapsedTime = 0;
+                    rollerState = RollerStates.intake;
+                }
+                break;
+            case shootMid:
+                if (tilterState == TilterStates.mid) {
+                    intakeSpeed = -0.35;
+                    elapsedTime += dt;
+                }
+                if (elapsedTime > 1){
+                    elapsedTime = 0;
+                    rollerState = RollerStates.intake;
+                }
+                break;
+            case shootFull:
+                intakeSpeed = -1;
+                elapsedTime += dt;
+                if (elapsedTime > 1){
+                    elapsedTime = 0;
+                    rollerState = RollerStates.intake;
+                }
+                break;
         }
 
-        if (lastPosIndex == 0 && posIndex != 0){
-            //clamp();
-        }
         if (isClampped) intakeClamp.set(false);
         if (!isClampped) intakeClamp.set(true);
-        //setRollers(intakeSpeed);
+        
+        
         double tilterError = currentTilterTarget - tilter.getSelectedSensorPosition();
         double out = tilterPID.calculate(tilterError);
         out = MathUtility.clamp(out, -1, 1);
-        if (tilterError < 2000 && currentTilterTarget == 0) out = 0.02;
-        //tilterSet(out);
-        
-        if (currentTilterTarget == tilterPos.up){
-            //currentTilterTarget = 0;
-        }
+        //setTilter(out);
+
         if (limitSwitch.get()){
             tilter.setSelectedSensorPosition(0);
         }
-        lastTime = currentTime;
-        lastPosIndex = posIndex;
+
+        setRollers(intakeSpeed);
+
+        lastTime = Timer.getFPGATimestamp();
+
         SmartDashboard.putBoolean("tileter limit", limitSwitch.get());
         SmartDashboard.putNumber("tilterPos", tilter.getSelectedSensorPosition());
         SmartDashboard.putNumber("tilterError", tilterError);
         SmartDashboard.putNumber("tilter out ", out);
-        SmartDashboard.putNumber("posindex", posIndex);
         SmartDashboard.putBoolean("isClamped", isClampped);
         SmartDashboard.putNumber("currentTarget", currentTilterTarget);
     }
 
-    public void tilterSet (double speed){
+    void updateStates(){
+        if (tilter.getSelectedSensorPosition() > -1000) tilterState = TilterStates.up;
+        if (MathUtility.isWithin(tilter.getSelectedSensorPosition(), -13000, -11000)) tilterState = TilterStates.mid;
+        if (tilter.getSelectedSensorPosition() < -31000) tilterState = TilterStates.down;
+        else tilterState = TilterStates.moving;
+    }
+
+    public void setStates(States istate, RollerStates irollerStates){
+        state = istate;
+        rollerState = irollerStates;
+    }
+
+    public RollerStates getRollerState(){
+        return rollerState;
+    }
+    public States getState(){
+        return state;
+    }
+
+    public void setTilter (double speed){
         speed = MathUtility.clamp(speed, -1, 1);
         if (limitSwitch.get() && speed > 0) {
             tilter.set(0);
         }
         else tilter.set(speed);
-    }
-
-
-    public void setTilterPos(int iposIndex){
-        posIndex = MathUtility.clamp(iposIndex, 0, 2);
-        if (!isClampped) return;
-        switch (posIndex){
-            case 0: {
-                currentTilterTarget = tilterPos.down;
-                break;
-            }
-            case 1: {
-                currentTilterTarget = tilterPos.second;
-                break;
-            }
-            case 2: {
-                currentTilterTarget = tilterPos.up;
-                break;
-            }
-        }
     }
 
     public void setRollers(double speed){
@@ -158,18 +192,9 @@ public class Intake extends SubsystemBase{
     }
 
     public void unClamp(){
-        //if (posIndex != 0) return;
         isClampped = false;
     }
 
-    public void shoot(){
-        shoot = true;   
-    }
 
-    public void setState(int currentTilterPos, boolean shoot){
-        posIndex = currentTilterPos;
-        this.shoot = shoot;
-        setTilterPos(posIndex);
-    }
-    
+
 }
