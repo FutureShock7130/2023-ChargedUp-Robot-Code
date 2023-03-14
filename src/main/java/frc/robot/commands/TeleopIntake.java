@@ -1,13 +1,8 @@
 package frc.robot.commands;
 
-import java.lang.invoke.ConstantBootstraps;
-
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.ChenryLib.MathUtility;
 import frc.robot.Constants;
-import frc.robot.Constants.intake;
 import frc.robot.subsystems.Intake;
 
 public class TeleopIntake extends CommandBase {
@@ -58,8 +53,6 @@ public class TeleopIntake extends CommandBase {
         else if (operator.getRawButton(Constants.JoystickConstants.btn_X)) intake.setRollers(-1);
         else intake.setRollers(0);
 
-        if (operator.getPOV() == 90) intake.clamp();
-        if (operator.getPOV() == 270) intake.unClamp();
         if (operator.getRawAxis(Constants.JoystickConstants.trigger_L) > 0.6) intake.clamp();
         if (operator.getRawAxis(Constants.JoystickConstants.trigger_R) > 0.6) intake.unClamp();
         intake.tilterSet(operator.getRawAxis(Constants.JoystickConstants.rightStick_Y) * 0.3);

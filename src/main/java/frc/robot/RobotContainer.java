@@ -28,7 +28,8 @@ import frc.robot.subsystems.*;
  */
 public class RobotContainer {
   /* Controllers */
-  private final Joystick driver = new Joystick(0);
+  // private final Joystick driver = new Joystick(0);
+  private final XboxController driver = new XboxController(0);
   private final Joystick operator = new Joystick(1);
 
   UsbCamera intakeCamera = CameraServer.startAutomaticCapture();
@@ -52,7 +53,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    iIntake.setDefaultCommand(new TeleopIntake(iIntake, driver, operator));
+    // iIntake.setDefaultCommand(new TeleopIntake(iIntake, driver, operator));
     //Superstructure.setDefaultCommand(new TeleopUpper(Superstructure, driver, operator));
     s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver));
 

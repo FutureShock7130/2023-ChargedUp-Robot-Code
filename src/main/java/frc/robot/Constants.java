@@ -45,6 +45,8 @@ public final class Constants {
     public static final int solenoidPort = 1;
     public static final int elbowCanCoderPort = 5;
     public static final int stringCanCoderPort = 6;
+    public static final int grabberLeft = 0;
+    public static final int grabberRight = 0;
   }
 
 

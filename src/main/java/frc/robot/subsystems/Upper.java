@@ -5,6 +5,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,17 +18,24 @@ import frc.ChenryLib.SettledUtility;
 import frc.robot.Constants;
 
 public class Upper extends SubsystemBase {
+
     public static Object states;
+
+    // Elbow
     private WPI_TalonFX elbowLeft = new WPI_TalonFX(Constants.Superstructure.talonLeftPort, "7130");
     private WPI_TalonFX elbowRight = new WPI_TalonFX(Constants.Superstructure.talonRightPort, "7130");;
     private CANCoder elbowEncoder = new CANCoder(Constants.Superstructure.elbowCanCoderPort, "7130");
     private SettledUtility elbowSU = new SettledUtility(100, 5, 2);
 
+    // String
     private WPI_TalonFX stringboi = new WPI_TalonFX(Constants.Superstructure.talonStringPort, "7130");
     private CANCoder stringEncoder = new CANCoder(Constants.Superstructure.stringCanCoderPort, "7130");
     private SettledUtility stringSU = new SettledUtility(100, 50, 50);
 
-    private Solenoid squishyboi = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Superstructure.solenoidPort);
+    // Grabber
+    // private Solenoid squishyboi = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Superstructure.solenoidPort);
+    private CANSparkMax grabberLeft = new CANSparkMax(Constants.Superstructure.grabberLeft, MotorType.kBrushless);
+    private CANSparkMax grabberRight = new CANSparkMax(Constants.Superstructure.grabberRight, MotorType.kBrushless);
 
     private PID elbowPID = new PID(0.04, 0, 0.01, 0, 0);
     private PID stringPID = new PID(0.01, 0, 0, 0, 0);
@@ -79,6 +89,8 @@ public class Upper extends SubsystemBase {
         stringEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToZero);
         stringEncoder.setPosition(0);
         stringEncoder.configSensorDirection(true);
+
+        grabberRight.follow(grabberLeft, true);
     }
 
     @Override
@@ -171,11 +183,8 @@ public class Upper extends SubsystemBase {
         currentStringTarget = target;
     }
 
-    void clamp() {
-        squishyboi.set(true);
+    void setGrabberRollers(double speed) {
+        grabberLeft.set(MathUtility.clamp(speed, -1, 1));
     }
 
-    void unClamp() {
-        squishyboi.set(false);
-    }
 }

@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -11,7 +12,8 @@ import frc.robot.subsystems.Swerve;
 
 public class TeleopSwerve extends CommandBase {
   private Swerve s_Swerve;
-  private Joystick controller;
+  // private Joystick controller;
+  private XboxController xJoystick;
 
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
   private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0);
@@ -21,10 +23,10 @@ public class TeleopSwerve extends CommandBase {
 
   public TeleopSwerve(
       Swerve s_Swerve,
-      Joystick iJoystick) {
+      XboxController xController) {
     this.s_Swerve = s_Swerve;
     addRequirements(s_Swerve);
-    controller = iJoystick;
+    this.xJoystick = xController;
   }
 
   @Override
@@ -32,14 +34,14 @@ public class TeleopSwerve extends CommandBase {
     /* Get Values, Deadband*/
     double translationVal =
         translationLimiter.calculate(
-            MathUtil.applyDeadband(controller.getRawAxis(Constants.JoystickConstants.leftStick_Y), Constants.Swerve.stickDeadband));
+            MathUtil.applyDeadband(xJoystick.getLeftY(), Constants.Swerve.stickDeadband));
     double strafeVal =
         strafeLimiter.calculate(
-            MathUtil.applyDeadband(controller.getRawAxis(Constants.JoystickConstants.leftStick_X), Constants.Swerve.stickDeadband));
+            MathUtil.applyDeadband(xJoystick.getLeftX(), Constants.Swerve.stickDeadband));
     double rotationVal =
-        rotationLimiter.calculate(controller.getRawAxis(Constants.JoystickConstants.rightStick_X) * 0.5);
+        rotationLimiter.calculate(xJoystick.getRightX() * 0.5);
     
-    if (controller.getRawButtonPressed(Constants.JoystickConstants.btn_X)) fieldOriented = !fieldOriented;    
+    if (xJoystick.getXButton()) fieldOriented = !fieldOriented;    
 
     int thing = fieldOriented ? 1 : 0;
     SmartDashboard.putNumber("fo ", thing);

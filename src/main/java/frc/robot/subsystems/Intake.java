@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -29,7 +28,6 @@ public class Intake extends SubsystemBase{
     private double lastTime;
     private double elapsedTime = 0;
     
-    
     private boolean isClampped = true;
     private int posIndex = 2;
     private int lastPosIndex = 2;
@@ -37,7 +35,7 @@ public class Intake extends SubsystemBase{
     private boolean shoot = false;
 
 
-    static class tilterPos{
+    private static class tilterPos{
         public static double up = 0;
         public static double down = -32000;
         public static double second = -11000;
