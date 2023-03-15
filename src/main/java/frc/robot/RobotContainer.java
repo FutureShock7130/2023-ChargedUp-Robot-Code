@@ -88,9 +88,12 @@ public class RobotContainer {
     
     return new SequentialCommandGroup(
       new indexAuto(index, indexStates.AimTop),
+      new betterDelay(1),
+
       new InstantCommand(()->{
-        index.shootByState();;
+        index.shootByState();
       }),
+      new betterDelay(0.5),
 
       new InstantCommand(()->{
         SmartDashboard.putBoolean("ENDAUTO", true);

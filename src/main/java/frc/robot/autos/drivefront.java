@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.ChenryLib.PID;
 import frc.ChenryLib.SettledUtility;
+import frc.lib.vision.settle;
 import frc.robot.subsystems.Swerve;
 
 public class drivefront extends CommandBase{
@@ -20,6 +21,7 @@ public class drivefront extends CommandBase{
     double output;
     PID frontPID;
     SettledUtility settled;
+    settle ok = new settle();
     boolean finish;
 
     public drivefront(Swerve swerve, double targetDis){
@@ -37,10 +39,11 @@ public class drivefront extends CommandBase{
     public void execute() {
         currentDistance = drive.getPose().getX();
         error = targetDis - currentDistance;
-        settled = new SettledUtility(100, error, 0.1);
+        // settled = new SettledUtility(100, error, 0.1);
         output = frontPID.calculate(error);
-        finish = settled.isSettled(error);
-        
+        // finish = settled.isSettled(error);
+        finish = ok.OKsettle(error, 0.01);
+
         drive.drive(new Translation2d(output, 0), 0, false, true);
 
         SmartDashboard.putNumber("autoFrontX", currentDistance);
