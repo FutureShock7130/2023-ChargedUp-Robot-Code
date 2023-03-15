@@ -54,11 +54,11 @@ public class Index extends SubsystemBase {
   }
 
   // Tested Pos
-  private static class tilterPos {
-    static double upLimit = 0;
-    static double upSmoothPoint = -3564;
-    static double downlimit = -26000;
-    static double inCom = -6900;
+  public static class tilterPos {
+    public static double upLimit = 0;
+    public static double upSmoothPoint = -3564;
+    public static double downlimit = -26000;
+    public static double inCom = -6900;
   }
 
   private double currentTilterPos;
@@ -86,9 +86,14 @@ public class Index extends SubsystemBase {
     SmartDashboard.putNumber("Intake Vel", tilter.getSelectedSensorVelocity());
   }
 
+  public double getTilterPos(){
+    return currentTilterPos;
+  }
+
   void setTilter(double speed) {
-    if (tilter.getSelectedSensorPosition() <= tilterPos.downlimit && tilter.getSelectedSensorVelocity() < 0) tilter.set(0);
-    tilter.set(speed);
+    if (tilter.getSelectedSensorPosition() <= tilterPos.downlimit && speed < 0) tilter.set(0);
+    else if (limitSwitch.get() && speed > 0) tilter.set(0);
+    else tilter.set(speed);
   }
 
   public void setRollers(double speed) {

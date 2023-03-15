@@ -7,6 +7,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.ChenryLib.PID;
+import frc.ChenryLib.SettledUtility;
 import frc.robot.subsystems.Swerve;
 
 public class turn extends CommandBase {
@@ -14,12 +15,13 @@ public class turn extends CommandBase {
     double rotateTarget;
     double currentRotation;
     double error;
-    double settle = 5;//😱😱😱😱😱//degrees
     double output;
     double p = 0.001;
     double i = 0;
     double d = 0;
     PID turnPID;
+    SettledUtility settled;
+    boolean finish;
     
 
     public turn(Swerve swerve, double targetDegrees){
@@ -35,19 +37,23 @@ public class turn extends CommandBase {
 
     @Override
     public void execute() {
-        turnPID = new PID(p, i, d, rotateTarget, 1);//😱😱😱
         currentRotation = drive.getYaw().getRotations();
-        output = turnPID.calculate(Units.rotationsToDegrees(rotateTarget - currentRotation));
+        error = Units.rotationsToDegrees(rotateTarget - currentRotation);
+        turnPID = new PID(p, i, d, rotateTarget, 1);//😱😱😱
+        settled = new SettledUtility(100, error, 10);
+        output = turnPID.calculate(error);
+        finish = settled.isSettled(error);
+        
         drive.drive(new Translation2d(0,0), output, false, false);
         
         SmartDashboard.putNumber("autoTurnYaw", currentRotation);
         SmartDashboard.putNumber("autoTurnOutput", output);
-        SmartDashboard.putNumber("autoTurnError",rotateTarget - currentRotation);
+        SmartDashboard.putNumber("autoTurnError",error);
     }
 
     @Override
     public boolean isFinished() {
-        if(Units.rotationsToDegrees(Math.abs(rotateTarget - currentRotation)) <= settle){
+        if(finish){
             return true;
         }else{
             return false;
