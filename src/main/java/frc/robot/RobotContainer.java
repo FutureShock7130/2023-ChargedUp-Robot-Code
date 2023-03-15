@@ -11,16 +11,11 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.lib.vision.*;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Index.indexPos;
-import frc.robot.subsystems.Index.indexStates;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -60,7 +55,7 @@ public class RobotContainer {
     // iIntake.setDefaultCommand(new TeleopIntake(iIntake, driver, operator));
     //Superstructure.setDefaultCommand(new TeleopUpper(Superstructure, driver, operator));
     s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver));
-    index.setDefaultCommand(new TeleopIndex(index, driver, operator));
+    index.setDefaultCommand(new TeleopIndex(index, driver));
     apriltag.setDefaultCommand(new RunCommand(()->{
       Boolean ok = fieldShoot.OKshoot(apriltag.getCameratoTarget());
       SmartDashboard.putBoolean("OKshoot", ok);

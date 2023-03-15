@@ -34,40 +34,30 @@ public class Index extends SubsystemBase {
 
   private boolean isClamped = true;
   private boolean shoot = false;
-
   private indexStates state = indexStates.Standby;
-  // private indexPos position = indexPos.Up;
-  
+  private indexPos desirePos = indexPos.Up;
 
   public enum indexStates {
     Indexing,
-    Standby,
+    IndexHuman,
     AimTop,
     AimMiddle,
     AimBottom,
-    AimTopCS,
-    AimMiddleCS,
-    AimBottomCS
+    Standby
   }
 
   public enum indexPos {
     Up, // Up Limit
     Down, // Down Limit
-    GridCom, // In Community
-    TopCS, // Top Row (Charge Station)
-    MiddleCS, // Middle Row (Charge Station)
-    BottomCS // Bottom Row (Charge Station)
+    GridCom // In Community
   }
 
   // Tested Pos
   private static class tilterPos {
     static double upLimit = 0;
     static double upSmoothPoint = -3564;
-    static double downlimit = -27968;
+    static double downlimit = -26000;
     static double inCom = -6900;
-    static double topRowCS = 0;
-    static double middleRowCS = 0;
-    static double bottomRowCS = 0;
   }
 
   private double currentTilterPos;
@@ -87,6 +77,7 @@ public class Index extends SubsystemBase {
     if (shoot) shoot(-1);
     if (limitSwitch.get() && tilter.getSelectedSensorVelocity() > 0) tilter.set(0);
     if (tilter.getSelectedSensorPosition() <= tilterPos.downlimit && tilter.getSelectedSensorVelocity() < 0) tilter.set(0);
+    if (desirePos == indexPos.Up && !limitSwitch.get() && tilterPos.upLimit - currentTilterPos < 1500) tilter.set(0.1);
 
     SmartDashboard.putBoolean("Intake isClamped", isClamped);
     SmartDashboard.putBoolean("Intake atUpLimit", limitSwitch.get());
@@ -103,6 +94,7 @@ public class Index extends SubsystemBase {
     setRollers(MathUtility.clamp(speed, -1, 1));
     new betterDelay(1);
     shoot = false;
+    setState(indexStates.Standby);
   }
 
   public void clamp() {
@@ -126,7 +118,6 @@ public class Index extends SubsystemBase {
   }
 
   public void setTilterPosBySpd(double speed) {
-
     if (speed > 0 && limitSwitch.get()) 
       tilter.set(ControlMode.PercentOutput, 0);
     // else if (speed < 0 && tilter.getSelectedSensorPosition() < tilterPos.downlimit) 
@@ -143,28 +134,22 @@ public class Index extends SubsystemBase {
     double setpoint = 0;
     double error = setpoint - tilter.getSelectedSensorPosition();
     double output = tilterPID.calculate(error);
-    tilter.set(ControlMode.PercentOutput, MathUtility.clamp(output, -0.1, 0.1));
+    tilter.set(ControlMode.PercentOutput, MathUtility.clamp(output, -0.17, 0.17));
   }
 
   public void setTilterPosAuto(indexPos pos) {
     switch (pos) {
       case Up:
-        tilter.set(ControlMode.PercentOutput, tilterPID.calculate(tilterPos.upLimit - currentTilterPos) * 0.5);
+        desirePos = indexPos.Up;
+        tilter.set(ControlMode.PercentOutput, MathUtility.clamp(tilterPID.calculate(tilterPos.upLimit - currentTilterPos), -0.3, 0.3));
         break;
       case Down:
-        tilter.set(ControlMode.PercentOutput, tilterPID.calculate(tilterPos.downlimit - currentTilterPos) * 0.5);
+        desirePos = indexPos.Down;
+        tilter.set(ControlMode.PercentOutput, MathUtility.clamp(tilterPID.calculate(tilterPos.downlimit - currentTilterPos), -0.3, 0.3));
         break;
       case GridCom:
-        tilter.set(ControlMode.PercentOutput, tilterPID.calculate(tilterPos.inCom - currentTilterPos) * 0.5);
-      case TopCS:
-        tilter.set(ControlMode.PercentOutput, tilterPID.calculate(tilterPos.topRowCS - currentTilterPos) * 0.5);
-        break;
-      case MiddleCS:
-        tilter.set(ControlMode.PercentOutput, tilterPID.calculate(tilterPos.middleRowCS - currentTilterPos) * 0.5);
-        break;
-      case BottomCS:
-        tilter.set(ControlMode.PercentOutput, tilterPID.calculate(tilterPos.bottomRowCS - currentTilterPos) * 0.5);
-        break;
+        desirePos = indexPos.GridCom;
+        tilter.set(ControlMode.PercentOutput, MathUtility.clamp(tilterPID.calculate(tilterPos.inCom - currentTilterPos), -0.3, 0.3));
       default:
         break;
     }
@@ -174,11 +159,10 @@ public class Index extends SubsystemBase {
     switch (state) {
       case Indexing:
         setTilterPosAuto(indexPos.Down);
-        if (tilter.getSelectedSensorPosition() < tilterPos.downlimit) unclamp();
-        else clamp();
         setRollers(0.28);
+        unclamp();
         break;
-      case Standby:
+      case IndexHuman:
         clamp();
         setRollers(0.28);
         setTilterPosAuto(indexPos.Up);
@@ -187,58 +171,43 @@ public class Index extends SubsystemBase {
         clamp();
         setRollers(0);
         setTilterPosAuto(indexPos.GridCom);
-        if (shoot) { 
-          if (MathUtility.isWithin(tilter.getSelectedSensorPosition(), -7200, -6800)) shoot(-1);
-        }
         break;
       case AimMiddle:
         clamp();
         setRollers(0);
         setTilterPosAuto(indexPos.GridCom);
-        if (shoot) { 
-          if (MathUtility.isWithin(tilter.getSelectedSensorPosition(), -7200, -6800)) shoot(-1);
-        }
         break;
       case AimBottom:
         clamp();
         setRollers(0);
         setTilterPosAuto(indexPos.GridCom);
-        if (shoot) { 
-          if (MathUtility.isWithin(tilter.getSelectedSensorPosition(), -7200, -6800)) shoot(-1);
-        }
         break;
-      case AimTopCS:
+      case Standby:
         clamp();
         setRollers(0);
-        new betterDelay(0.2);
-        setTilterPosAuto(indexPos.TopCS);
-        new betterDelay(0.2);
-        if (shoot) shoot(-1);
-        break;
-      case AimMiddleCS:
-        clamp();
-        setRollers(0);
-        new betterDelay(0.2);
-        setTilterPosAuto(indexPos.MiddleCS);
-        new betterDelay(0.2);
-        if (shoot) shoot(-1);
-        break;
-      case AimBottomCS:
-        clamp();
-        setRollers(0);
-        new betterDelay(0.2);
-        setTilterPosAuto(indexPos.BottomCS);
-        new betterDelay(0.2);
-        if (shoot) shoot(-1);
-        break;
+        // setRollers(0.038);
+        setTilterPosAuto(indexPos.Up);
       default:
         break;
     }
   }
 
-  public void setState(indexStates state, boolean shoot) {
+  public void shootByState() {
+    switch (state) {
+      case AimTop:
+        shoot(-1);
+        break;
+      case AimMiddle:
+        shoot(-0.6);
+        break;
+      case AimBottom:
+        shoot(-0.2);
+        break;
+    }
+  }
+
+  public void setState(indexStates state) {
     this.state = state;
-    this.shoot = shoot;
   }
 
   public indexStates getState() {
