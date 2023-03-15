@@ -11,6 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -117,11 +118,10 @@ public class Swerve extends SubsystemBase {
     return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - averageAngle) : Rotation2d.fromDegrees(averageAngle);
   }
 
-  public double getPitch(){
-    double averagePitch = (
-      gyro1.getPitch() + gyro2.getPitch() + gyro3.getPitch() + gyro4.getPitch()
-    )/4;
-    return averagePitch;
+  public double getRoll(){
+  //  double averagerRoll = gyro1.getRoll() + gyro2.getRoll() + gyro3.getRoll() + gyro4.getRoll();
+  //  return averagerRoll/4;
+    return gyro1.getRoll();
   }
 
   @Override
