@@ -17,7 +17,7 @@ public class drivefront extends CommandBase{
     double currentDistance;
     double error;
     double p = 1.55;
-    double i = 0.001;
+    double i = 0.005;
     double d = 0.5;
     double output;
     double startY;
@@ -47,7 +47,7 @@ public class drivefront extends CommandBase{
         // settled = new SettledUtility(100, error, 0.1);
         output = MathUtility.clamp(frontPID.calculate(error), -2.5, 2.5) ;
         // finish = settled.isSettled(error);
-        finish = ok.OKsettle(error, 0.005);
+        finish = ok.OKsettle(error, 0.01);
 
         drive.drive(new Translation2d(output, 0), 0, false, true);
 
@@ -73,7 +73,7 @@ public class drivefront extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         drive.drive(new Translation2d(0, 0), 0, false, false);
-        drive.resetOdometry(new Pose2d(0, 0, new Rotation2d(0, 0)));
+        drive.reset();
     }
 
 

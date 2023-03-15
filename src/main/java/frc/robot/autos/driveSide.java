@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
 import frc.ChenryLib.SettledUtility;
 import frc.lib.vision.settle;
@@ -15,7 +16,7 @@ public class driveSide extends CommandBase{
     double targetDis;
     double currentDistance;
     double error;
-    double p = 1.5;
+    double p = 1.2;
     double i = 0.001;
     double d = 0.5;
     double output;
@@ -39,7 +40,7 @@ public class driveSide extends CommandBase{
     public void execute() {
         currentDistance = drive.getPose().getY();
         error = targetDis - currentDistance;
-        output = sidePID.calculate(error);
+        output = MathUtility.clamp(sidePID.calculate(error), -2.5, 2.5);
         // settled = new SettledUtility(100, error, 0.1);
         // finish = settled.isSettled(error);
         finish = ok.OKsettle(error, 0.01);
