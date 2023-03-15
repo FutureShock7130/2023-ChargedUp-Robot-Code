@@ -31,7 +31,7 @@ public class balance extends CommandBase{
     @Override
     public void execute() {
         currentPitch = drive.getPitch();
-        define = currentPitch > 0 ? 1:-1;
+        define = currentPitch > 0 ? -1:1;
         if(Math.abs(currentPitch) >= aboard){
             drive.drive(new Translation2d(define*balanceSpeed, 0), 0, false, false);
         }
