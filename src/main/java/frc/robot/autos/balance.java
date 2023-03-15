@@ -9,7 +9,7 @@ import frc.robot.subsystems.Swerve;;
 public class balance extends CommandBase{
     Swerve drive;
     double output;
-    double balanceSpeed = 0.01;
+    double balanceSpeed = 0.1;
     double currentPitch;
     PID balancePID;
     double p = 0.0001;
