@@ -8,6 +8,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -87,17 +88,15 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     
     return new SequentialCommandGroup(
-      new indexAuto(index, indexStates.AimTop),
-      new betterDelay(1),
+      // new indexAuto(index, indexStates.AimTop),
+      // new betterDelay(0.5),
 
-      new InstantCommand(()->{
-        index.shootByState();
-      }),
-      new betterDelay(0.5),
 
-      new InstantCommand(()->{
-        SmartDashboard.putBoolean("ENDAUTO", true);
-      })
+      // new InstantCommand(()->{
+      //   index.shootByState();
+      //   Timer.delay(1);
+      // }),
+      new turn(s_Swerve, 180)
     );
     // return new SequentialCommandGroup(
     //   new indexAuto(index, indexStates.AimTop),

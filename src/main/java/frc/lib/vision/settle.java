@@ -13,7 +13,7 @@ public class settle {
         this.error = error;
         this.errorLimit = errorLimit;
 
-        if (error <= errorLimit){
+        if (Math.abs(error) <= errorLimit){
             return true;
         }else{
             return false;

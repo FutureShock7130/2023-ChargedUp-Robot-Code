@@ -5,7 +5,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
+import frc.ChenryLib.SetPointPID;
 import frc.ChenryLib.SettledUtility;
 import frc.lib.vision.settle;
 import frc.robot.subsystems.Swerve;
@@ -15,11 +17,13 @@ public class drivefront extends CommandBase{
     double targetDis;
     double currentDistance;
     double error;
-    double p = 1.5;
+    double p = 1.55;
     double i = 0.001;
     double d = 0.5;
     double output;
-    PID frontPID;
+    double startY;
+    double startGYRO;
+    SetPointPID frontPID;
     SettledUtility settled;
     settle ok = new settle();
     boolean finish;
@@ -32,7 +36,9 @@ public class drivefront extends CommandBase{
 
     @Override
     public void initialize() {
-        frontPID = new PID(p, i, d, targetDis, 1);//😱😱😱😱😱
+        frontPID = new SetPointPID(p, i, d, targetDis, 1);//😱😱😱😱😱
+        startY = drive.getPose().getY();
+        startGYRO = drive.getYaw().getRotations();
     }
 
     @Override
@@ -40,11 +46,16 @@ public class drivefront extends CommandBase{
         currentDistance = drive.getPose().getX();
         error = targetDis - currentDistance;
         // settled = new SettledUtility(100, error, 0.1);
-        output = frontPID.calculate(error);
+        output = MathUtility.clamp(frontPID.calculate(error), -2.5, 2.5) ;
         // finish = settled.isSettled(error);
-        finish = ok.OKsettle(error, 0.01);
+        finish = ok.OKsettle(error, 0.005);
 
         drive.drive(new Translation2d(output, 0), 0, false, true);
+
+        SmartDashboard.putNumber("autoY", drive.getPose().getY());
+        SmartDashboard.putNumber("Yerror", drive.getPose().getY() - startY);
+        SmartDashboard.putNumber("autoGYRO", drive.getYaw().getRotations());
+        SmartDashboard.putNumber("GYROerror", startGYRO - drive.getYaw().getRotations());
 
         SmartDashboard.putNumber("autoFrontX", currentDistance);
         SmartDashboard.putNumber("autoFrontOutput", output);

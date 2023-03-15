@@ -6,7 +6,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
+import frc.ChenryLib.SetPointPID;
 import frc.ChenryLib.SettledUtility;
 import frc.robot.subsystems.Swerve;
 
@@ -19,7 +21,7 @@ public class turn extends CommandBase {
     double p = 0.001;
     double i = 0;
     double d = 0;
-    PID turnPID;
+    SetPointPID turnPID;
     SettledUtility settled;
     boolean finish;
     
@@ -39,9 +41,9 @@ public class turn extends CommandBase {
     public void execute() {
         currentRotation = drive.getYaw().getRotations();
         error = Units.rotationsToDegrees(rotateTarget - currentRotation);
-        turnPID = new PID(p, i, d, rotateTarget, 1);//😱😱😱
+        turnPID = new SetPointPID(p, i, d, rotateTarget, 1);//😱😱😱
         settled = new SettledUtility(100, error, 10);
-        output = turnPID.calculate(error);
+        output = MathUtility.clamp(turnPID.calculate(error), -2, 2) ;
         finish = settled.isSettled(error);
         
         drive.drive(new Translation2d(0,0), output, false, false);
