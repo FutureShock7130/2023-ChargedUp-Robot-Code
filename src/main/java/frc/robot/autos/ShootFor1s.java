@@ -20,13 +20,13 @@ public class ShootFor1s extends CommandBase {
     addRequirements(index);
   }
 
-  private double lastTime;
+  private double initTime;
   private double elapsedTime;
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    lastTime = Timer.getFPGATimestamp();
+    initTime = Timer.getFPGATimestamp();
     elapsedTime = 0;
   }
 
@@ -34,9 +34,7 @@ public class ShootFor1s extends CommandBase {
   @Override
   public void execute() {
     index.shootByState();
-    double dt = Timer.getFPGATimestamp() - lastTime;
-    elapsedTime += dt;
-    lastTime = Timer.getFPGATimestamp();
+    elapsedTime = Timer.getFPGATimestamp() - initTime;
   }
 
   // Called once the command ends or is interrupted.
