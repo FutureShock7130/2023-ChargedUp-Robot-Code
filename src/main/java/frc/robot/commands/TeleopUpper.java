@@ -21,8 +21,8 @@ public class TeleopUpper extends CommandBase {
 
   @Override
   public void execute() {
-    // if (controller.getRawButton(Constants.JoystickConstants.btn_Y)) superstructure.setStates(States.coneHigh);
-    // if (controller.getRawButton(Constants.JoystickConstants.btn_A)) superstructure.setStates(States.down);
+    //if (controller.getRawButton(Constants.JoystickConstants.btn_Y)) superstructure.setStates(States.coneHigh);
+    if (controller.getRawButton(Constants.JoystickConstants.btn_A)) superstructure.setStates(States.down);
     //superstructure.stringSet(upper.getRawAxis(Constants.JoystickConstants.leftStick_Y));
     //superstructure.elbowSet(upper.getRawAxis(Constants.JoystickConstants.rightStick_Y) * 0.4);
   }

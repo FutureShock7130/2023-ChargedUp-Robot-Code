@@ -8,6 +8,8 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
@@ -30,7 +32,6 @@ public class Upper extends SubsystemBase {
     private SettledUtility stringSU = new SettledUtility(100, 50, 50);
 
     // Grabber
-    // private Solenoid squishyboi = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.Superstructure.solenoidPort);
     private CANSparkMax grabberLeft = new CANSparkMax(Constants.Superstructure.grabberLeft, MotorType.kBrushless);
     private CANSparkMax grabberRight = new CANSparkMax(Constants.Superstructure.grabberRight, MotorType.kBrushless);
 
@@ -48,15 +49,13 @@ public class Upper extends SubsystemBase {
 
     private static class elbowPos {
         static double mid = 71;
-        //static double high = 57;
         static double down = 155;
         static double human = 60; //untested 🙌🙌🙌🙌
-        //static double placingOffset = -5; //untested🙌🙌🙌🙌
+        static double placing = 75; //untested🙌🙌🙌🙌
         static double outside = 75;
     }
 
     private static class stringPos {
-        //static double high = 2100;
         static double mid = 460;
         static double down = 0;
         static double human = 1900; //untested 😒😒😒😒😒
@@ -65,7 +64,6 @@ public class Upper extends SubsystemBase {
     public static enum States {
         placing,
         human,
-        // coneHigh,
         coneMid,
         down,
     }
@@ -78,6 +76,10 @@ public class Upper extends SubsystemBase {
 
     States state = States.down;
     States lastState = States.down;
+    grabberStates grabberState = grabberStates.standby;
+
+    double elapsedTime = 0;
+    double lastTime = Timer.getFPGATimestamp();
 
     public Upper() {
         elbowLeft.setInverted(true);
@@ -87,7 +89,7 @@ public class Upper extends SubsystemBase {
         elbowEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Unsigned_0_to_360);
         elbowEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
         elbowEncoder.configMagnetOffset(50);
-        // can add invert if needed
+
         stringboi.setInverted(true);
         stringEncoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToZero);
         stringEncoder.setPosition(0);
@@ -100,47 +102,67 @@ public class Upper extends SubsystemBase {
     public void periodic() {
         double stringError = currentStringTarget - stringEncoder.getPosition();
         double elbowError = currentElbowTarget - elbowEncoder.getAbsolutePosition();
+        double grabberSpeed = 0;
+        double dt = Timer.getFPGATimestamp() - lastTime;
         
         switch (state){
             case down:
                 setStringTarget(stringPos.down);
                 updateStates(stringError, elbowError);
                 if (stringIsInside) setElbowTarget(elbowPos.down);;
+                grabberState = grabberStates.standby;
                 break;
-            // case coneHigh:
-            //     setElbowTarget(elbowPos.high);
-            //     updateStates(stringError, elbowError);
-            //     if (elbowIsOutside) setStringTarget(stringPos.high);
-            //     break;
             case coneMid:
                 setElbowTarget(elbowPos.mid);
                 updateStates(stringError, elbowError);
                 if (elbowIsOutside) setStringTarget(stringPos.mid);
+                if (grabberState != grabberStates.placing) grabberState = grabberStates.standby;
                 break;
             case human:
                 setElbowTarget(elbowPos.human);
                 updateStates(stringError, elbowError);
                 if (elbowIsOutside) setStringTarget(stringPos.human);
+                grabberState = grabberStates.intake;
                 break;
             case placing:
-                //setElbowTarget(currentElbowTarget + elbowPos.placingOffset); 😢🎶🎶🎶😎😢😢😢
+                setElbowTarget(elbowPos.placing); //😢🎶🎶🎶😎😢😢😢
+                grabberState = grabberStates.placing;
+                elapsedTime += dt;
+                if (elapsedTime > 1) {
+                    state = States.coneMid;
+                    elapsedTime = 0;
+                    grabberState = grabberStates.standby;
+                }
                 break;
+        }
+
+        switch (grabberState){
+            case intake:
+                grabberSpeed = 0.5;
+            case standby:
+                grabberSpeed = 0.05;
+            case placing:
+                grabberSpeed = -1;
         }
 
         lastState = state;
 
 
         updateStates(stringError, elbowError);
-        // SmartDashboard.putNumber("elbow abs pos", elbowEncoder.getAbsolutePosition());
-        // SmartDashboard.putNumber("string enc pos", stringEncoder.getPosition());
-        // SmartDashboard.putNumber("elbow error ", elbowError);
-        // SmartDashboard.putNumber("elbow out ", elbowPID.calculate(elbowError));
-        // SmartDashboard.putNumber("string error", stringError);
-        // SmartDashboard.putNumber("string out ", stringPID.calculate(stringError));
-        // SmartDashboard.putBoolean("sting settled", stringSettled);
-        // SmartDashboard.putBoolean("elbow is outside ", elbowIsOutside);
-        stringSet(stringPID.calculate(stringError));
-        elbowSet(elbowPID.calculate(elbowError));
+        SmartDashboard.putNumber("elbow abs pos", elbowEncoder.getAbsolutePosition());
+        SmartDashboard.putNumber("string enc pos", stringEncoder.getPosition());
+        SmartDashboard.putNumber("elbow error ", elbowError);
+        SmartDashboard.putNumber("elbow out ", elbowPID.calculate(elbowError));
+        SmartDashboard.putNumber("string error", stringError);
+        SmartDashboard.putNumber("string out ", stringPID.calculate(stringError));
+        SmartDashboard.putBoolean("sting settled", stringSettled);
+        SmartDashboard.putBoolean("elbow is outside ", elbowIsOutside);
+        
+        
+        //stringSet(stringPID.calculate(stringError)); //😢😢😢😢😢😢😢😢
+        elbowSet(elbowPID.calculate(elbowError)); 
+        grabberSpeed = MathUtility.clamp(grabberSpeed, -1, 1);
+        setGrabberRollers(grabberSpeed);
     }
 
     public void setStates (States istate){
