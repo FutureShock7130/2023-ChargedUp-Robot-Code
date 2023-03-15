@@ -1,5 +1,7 @@
 package frc.robot.autos;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -12,7 +14,7 @@ public class drivefront extends CommandBase{
     double currentDistance;
     double p, i, d, output;
     PID frontPID;
-    double settle = 0.1;//😱😱😱😱
+    double settle = 0.001;//😱😱😱😱
 
     public drivefront(Swerve swerve, double targetDis, double kp, double ki, double kd){
         drive = swerve;
@@ -32,10 +34,11 @@ public class drivefront extends CommandBase{
     public void execute() {
         currentDistance = drive.getPose().getX();
         output = frontPID.calculate(targetDis - currentDistance);
-        // drive.drive(new Translation2d(output, 0), 0, false, true);
+        drive.drive(new Translation2d(output, 0), 0, false, true);
 
         SmartDashboard.putNumber("autoFrontX", currentDistance);
         SmartDashboard.putNumber("autoFrontOutput", output);
+        SmartDashboard.putNumber("autoFrontError", targetDis - currentDistance);
     }
 
     @Override
@@ -50,6 +53,8 @@ public class drivefront extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         drive.drive(new Translation2d(0, 0), 0, false, false);
+        drive.resetOdometry(new Pose2d(0, 0, new Rotation2d(0, 0)));
     }
+
 
 }
