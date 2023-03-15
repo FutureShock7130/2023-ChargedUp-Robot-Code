@@ -41,9 +41,10 @@ public class turn extends CommandBase {
     public void execute() {
         currentRotation = drive.getYaw().getRotations();
         error = Units.rotationsToDegrees(rotateTarget - currentRotation);
+        double mappedError = MathUtility.constrainAngleDegrees(error);
         turnPID = new SetPointPID(p, i, d, rotateTarget, 1);//😱😱😱
         settled = new SettledUtility(100, error, 10);
-        output = MathUtility.clamp(turnPID.calculate(error), -2, 2) ;
+        output = MathUtility.clamp(turnPID.calculate(mappedError), -3, 3) ;
         finish = settled.isSettled(error);
         
         drive.drive(new Translation2d(0,0), output, false, false);
