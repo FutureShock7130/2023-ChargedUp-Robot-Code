@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.SetPointPID;
 import frc.ChenryLib.SettledUtility;
-import frc.lib.vision.settle;
 import frc.robot.subsystems.Swerve;
 
 public class turn extends CommandBase {
@@ -29,6 +28,7 @@ public class turn extends CommandBase {
         rotateTarget = targetDegrees;
         drive = swerve;
         addRequirements(swerve);
+        settled = new SettledUtility(100, 5, 10);
     }
 
     @Override
@@ -42,7 +42,6 @@ public class turn extends CommandBase {
         error = rotateTarget - currentRotation;
         double mappedError = MathUtility.constrainAngleDegrees(error);
         turnPID = new SetPointPID(p, i, d, 15, 1);//😱😱😱
-        settled = new SettledUtility(100, 5, 10);
         output = MathUtility.clamp(turnPID.calculate(mappedError), -3, 3) ;
         finish = settled.isSettled(mappedError);
         
@@ -50,7 +49,10 @@ public class turn extends CommandBase {
         
         SmartDashboard.putNumber("autoTurnYaw", currentRotation);
         SmartDashboard.putNumber("autoTurnOutput", output);
-        SmartDashboard.putNumber("autoTurnError",error);
+        SmartDashboard.putNumber("autoTurnError", error);
+        SmartDashboard.putNumber("yaw ", drive.getYaw().getDegrees());
+        SmartDashboard.putNumber("target ", rotateTarget);
+        SmartDashboard.putNumber("mapped error", mappedError);
     }
 
     @Override
