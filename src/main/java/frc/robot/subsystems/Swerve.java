@@ -37,7 +37,8 @@ public class Swerve extends SubsystemBase {
     gyro4.configFactoryDefault();
     zeroGyro();
 
-    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), getPositions());
+    swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), pos);
+    swerveOdometry.resetPosition(getYaw(), getPositions(), new Pose2d(0, 0, new Rotation2d(0)));
 
 
 
@@ -51,6 +52,13 @@ public class Swerve extends SubsystemBase {
 
     field = new Field2d();
   }
+
+  public static SwerveModulePosition[] pos = {
+    new SwerveModulePosition(0, new Rotation2d(0)),
+    new SwerveModulePosition(0, new Rotation2d(0)),
+    new SwerveModulePosition(0, new Rotation2d(0)),
+    new SwerveModulePosition(0, new Rotation2d(0)),
+  };
 
   public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
     SwerveModuleState[] swerveModuleStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(
