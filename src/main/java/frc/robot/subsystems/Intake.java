@@ -138,15 +138,15 @@ public class Intake extends SubsystemBase{
         if (isClampped) intakeClamp.set(false);
         if (!isClampped) intakeClamp.set(true);
         
+        if (limitSwitch.get()){
+            tilter.setSelectedSensorPosition(0);
+        }
         
         double tilterError = currentTilterTarget - tilter.getSelectedSensorPosition();
         double out = tilterPID.calculate(tilterError);
         out = MathUtility.clamp(out, -0.3, 0.3);
         //setTilter(out);
 
-        if (limitSwitch.get()){
-            tilter.setSelectedSensorPosition(0);
-        }
 
         setRollers(intakeSpeed);
 

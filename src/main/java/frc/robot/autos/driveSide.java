@@ -1,5 +1,7 @@
 package frc.robot.autos;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -12,7 +14,7 @@ public class driveSide extends CommandBase{
     double currentDistance;
     double p, i, d, output;
     PID sidePID;
-    double settle = 0.1;//😱😱😱😱
+    double settle = 0.001;//😱😱😱😱
 
     public driveSide(Swerve swerve, double targetDis, double kp, double ki, double kd){
         drive = swerve;
@@ -36,6 +38,7 @@ public class driveSide extends CommandBase{
 
         SmartDashboard.putNumber("autoSideY", currentDistance);
         SmartDashboard.putNumber("autoSideOutput", output);
+        SmartDashboard.putNumber("autoSideError", targetDis - currentDistance);
     }
 
     @Override
@@ -50,6 +53,7 @@ public class driveSide extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         drive.drive(new Translation2d(0, 0), 0, false, false);
+        drive.resetOdometry(new Pose2d(0, 0, new Rotation2d(0, 0)));
     }
 
 
