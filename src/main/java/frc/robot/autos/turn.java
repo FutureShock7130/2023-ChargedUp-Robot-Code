@@ -39,14 +39,15 @@ public class turn extends CommandBase {
 
     @Override
     public void execute() {
-        currentRotation = drive.getYaw().getRotations();
-        error = Units.rotationsToDegrees(rotateTarget - currentRotation);
-        turnPID = new SetPointPID(p, i, d, rotateTarget, 1);//😱😱😱
-        settled = new SettledUtility(100, error, 10);
-        output = MathUtility.clamp(turnPID.calculate(error), -2, 2) ;
-        finish = settled.isSettled(error);
+        currentRotation = drive.getYaw().getDegrees();
+        error = rotateTarget - currentRotation;
+        double mappedError = MathUtility.constrainAngleDegrees(error);
+        turnPID = new SetPointPID(p, i, d, 15, 1);//😱😱😱
+        settled = new SettledUtility(100, 5, 10);
+        output = MathUtility.clamp(turnPID.calculate(mappedError), -3, 3) ;
+        finish = settled.isSettled(mappedError);
         
-        drive.drive(new Translation2d(0,0), output, false, false);
+        drive.drive(new Translation2d(0,0), output, false, true);
         
         SmartDashboard.putNumber("autoTurnYaw", currentRotation);
         SmartDashboard.putNumber("autoTurnOutput", output);

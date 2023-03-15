@@ -48,7 +48,7 @@ public class Upper extends SubsystemBase {
 
     private static class elbowPos {
         static double mid = 71;
-        static double high = 57;
+        //static double high = 57;
         static double down = 155;
         static double human = 60; //untested 🙌🙌🙌🙌
         //static double placingOffset = -5; //untested🙌🙌🙌🙌
@@ -56,7 +56,7 @@ public class Upper extends SubsystemBase {
     }
 
     private static class stringPos {
-        static double high = 2100;
+        //static double high = 2100;
         static double mid = 460;
         static double down = 0;
         static double human = 1900; //untested 😒😒😒😒😒
@@ -65,9 +65,15 @@ public class Upper extends SubsystemBase {
     public static enum States {
         placing,
         human,
-        coneHigh,
+        // coneHigh,
         coneMid,
         down,
+    }
+
+    public static enum grabberStates{
+        intake,
+        standby,
+        placing
     }
 
     States state = States.down;
@@ -101,11 +107,11 @@ public class Upper extends SubsystemBase {
                 updateStates(stringError, elbowError);
                 if (stringIsInside) setElbowTarget(elbowPos.down);;
                 break;
-            case coneHigh:
-                setElbowTarget(elbowPos.high);
-                updateStates(stringError, elbowError);
-                if (elbowIsOutside) setStringTarget(stringPos.high);
-                break;
+            // case coneHigh:
+            //     setElbowTarget(elbowPos.high);
+            //     updateStates(stringError, elbowError);
+            //     if (elbowIsOutside) setStringTarget(stringPos.high);
+            //     break;
             case coneMid:
                 setElbowTarget(elbowPos.mid);
                 updateStates(stringError, elbowError);
