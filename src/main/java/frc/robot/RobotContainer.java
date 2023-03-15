@@ -88,25 +88,19 @@ public class RobotContainer {
 
 
     return new SequentialCommandGroup(
+      new indexAuto(index, indexStates.AimTop),
       new InstantCommand(()->{
-        index.setState(indexStates.AimTop);
-          }),
-        new InstantCommand(()->{
-          index.shootByState();
-        }),
+        index.shootByState();
+      }),
       new turn(s_Swerve, 180),
       new drivefront(s_Swerve, -5.6896),
-        new InstantCommand(()->{
-          index.setState(indexStates.Indexing);
-        }),
-        new ParallelCommandGroup(
-        new InstantCommand(()->{
-          index.setState(indexStates.Standby);
-        }),
-        new driveSide(s_Swerve, -1.2192)
-        ),
-        new drivefront(s_Swerve, 0.78105),
-        new balance(s_Swerve)
+      new indexAuto(index, indexStates.Indexing),
+      new ParallelCommandGroup(
+      new indexAuto(index, indexStates.Standby),
+      new driveSide(s_Swerve, -1.2192)
+      ),
+      new drivefront(s_Swerve, 0.78105),
+      new balance(s_Swerve)
     );
 
   }

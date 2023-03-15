@@ -6,18 +6,21 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.ChenryLib.PID;
+import frc.ChenryLib.SettledUtility;
 import frc.robot.subsystems.Swerve;
 
 public class drivefront extends CommandBase{
     Swerve drive;
     double targetDis;
     double currentDistance;
+    double error;
     double p = 1.5;
     double i = 0.001;
     double d = 0.5;
     double output;
     PID frontPID;
-    double settle = 0.05;//😱😱😱😱
+    SettledUtility settled;
+    boolean finish;
 
     public drivefront(Swerve swerve, double targetDis){
         drive = swerve;
@@ -33,17 +36,21 @@ public class drivefront extends CommandBase{
     @Override
     public void execute() {
         currentDistance = drive.getPose().getX();
-        output = frontPID.calculate(targetDis - currentDistance);
+        error = targetDis - currentDistance;
+        settled = new SettledUtility(100, error, 0.1);
+        output = frontPID.calculate(error);
+        finish = settled.isSettled(error);
+        
         drive.drive(new Translation2d(output, 0), 0, false, true);
 
         SmartDashboard.putNumber("autoFrontX", currentDistance);
         SmartDashboard.putNumber("autoFrontOutput", output);
-        SmartDashboard.putNumber("autoFrontError", targetDis - currentDistance);
+        SmartDashboard.putNumber("autoFrontError", error);
     }
 
     @Override
     public boolean isFinished() {
-        if(Math.abs(currentDistance - targetDis) <= settle){
+        if(finish){
             return true;
         }else{
             return false;
