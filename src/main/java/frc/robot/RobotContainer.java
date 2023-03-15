@@ -88,21 +88,23 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
 
-    return new SequentialCommandGroup(
-      new InstantCommand(()->{
-        index.setState(indexStates.AimTop, true);
-      }),
-      new ParallelCommandGroup(
-        new InstantCommand(()->{
-          index.setState(indexStates.Standby, false);
-        }),
-        new turn(s_Swerve, 0.5)
-      ),
-      new driveForTime(s_Swerve, 4.5, 1), //1.65 2
-      new InstantCommand(()->{
-        index.setState(indexStates.Indexing, false);
-      })
-      );
+    return new turn(s_Swerve, 0.5, 0.00001, 0, 0);
+
+    // return new SequentialCommandGroup(
+    //   // new InstantCommand(()->{
+    //   //   index.setState(indexStates.AimTop, true);
+    //   // }),
+    //   new ParallelCommandGroup(
+    //     // new InstantCommand(()->{
+    //     //   index.setState(indexStates.Standby, false);
+    //     // }),
+    //     // new turn(s_Swerve, 0.5)
+    //   ),
+    //   // new driveForTime(s_Swerve, 4.5, 1), //1.65 2
+    //   // new InstantCommand(()->{
+    //   //   index.setState(indexStates.Indexing, false);
+    //   // })
+    //   );
 
       //new driveForTime(s_Swerve, 1.2, -2));
   }
