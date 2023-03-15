@@ -12,16 +12,16 @@ public class driveSide extends CommandBase{
     Swerve drive;
     double targetDis;
     double currentDistance;
-    double p, i, d, output;
+    double p = 1.5;
+    double i = 0.001;
+    double d = 0.5;
+    double output;
     PID sidePID;
     double settle = 0.001;//😱😱😱😱
 
-    public driveSide(Swerve swerve, double targetDis, double kp, double ki, double kd){
+    public driveSide(Swerve swerve, double targetDis){
         drive = swerve;
         this.targetDis = targetDis;
-        p = kp;
-        i = ki;
-        d = kd;
         addRequirements(swerve);
     }
 

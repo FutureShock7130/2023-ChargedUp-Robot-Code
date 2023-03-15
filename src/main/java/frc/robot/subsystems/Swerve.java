@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.sensors.Pigeon2;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -114,6 +115,13 @@ public class Swerve extends SubsystemBase {
     double averageAngle = gyro1.getYaw() + gyro2.getYaw() + gyro3.getYaw() + gyro4.getYaw();
     averageAngle /= 4;
     return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - averageAngle) : Rotation2d.fromDegrees(averageAngle);
+  }
+
+  public double getPitch(){
+    double averagePitch = (
+      gyro1.getPitch() + gyro2.getPitch() + gyro3.getPitch() + gyro4.getPitch()
+    )/4;
+    return averagePitch;
   }
 
   @Override
