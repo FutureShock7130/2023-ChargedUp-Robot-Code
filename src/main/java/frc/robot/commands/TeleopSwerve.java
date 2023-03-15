@@ -58,6 +58,7 @@ public class TeleopSwerve extends CommandBase {
     }
     
     if (xJoystick.getStartButton()) fieldOriented = !fieldOriented;  
+    if (xJoystick.getBackButton()) s_Swerve.zeroGyro();
 
     int thing = fieldOriented ? 1 : 0;
     SmartDashboard.putNumber("fo ", thing);
