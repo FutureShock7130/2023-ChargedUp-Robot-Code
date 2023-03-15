@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.Swerve.Mod0;
 
 public class Swerve extends SubsystemBase {
   private final WPI_Pigeon2 gyro1;
@@ -100,9 +101,10 @@ public class Swerve extends SubsystemBase {
 
   public SwerveModulePosition[] getPositions() {
     SwerveModulePosition[] positions = new SwerveModulePosition[4];
-    for (SwerveModule mod : mSwerveMods){
-      positions[mod.moduleNumber] = mod.getPosition();
-    }
+    positions[0] = mSwerveMods[0].getPosition();
+    positions[1] = mSwerveMods[1].getPosition();
+    positions[2] = mSwerveMods[2].getPosition();
+    positions[3] = mSwerveMods[3].getPosition();
     return positions;
   }
 
