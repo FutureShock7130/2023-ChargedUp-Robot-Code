@@ -65,6 +65,7 @@ public class RobotContainer {
       Boolean ok = fieldShoot.OKshoot(apriltag.getCameratoTarget());
       SmartDashboard.putBoolean("OKshoot", ok);
     }, apriltag));
+
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -88,16 +89,18 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     
     return new SequentialCommandGroup(
-      new indexAuto(index, indexStates.AimTop),
-      new betterDelay(0.5),
+      // new indexAuto(index, indexStates.AimTop),
+      // new betterDelay(0.5),
 
 
-      new InstantCommand(()->{
-        index.shootByState();
-        Timer.delay(1);
-      }),
-      new drivefront(s_Swerve, 1),
-      new driveSide(s_Swerve, 0)
+      // new InstantCommand(()->{
+      //   index.shootByState();
+      //   Timer.delay(1);
+      // }),
+      new drivefront(s_Swerve, 5),
+      new turnForTime(s_Swerve, 1.25, 2.7),
+      new drivefront(s_Swerve, 0.5)
+      
     );
     // return new SequentialCommandGroup(
     //   new indexAuto(index, indexStates.AimTop),

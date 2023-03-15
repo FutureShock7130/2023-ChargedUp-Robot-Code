@@ -88,6 +88,10 @@ public class Swerve extends SubsystemBase {
     swerveOdometry.resetPosition(getYaw(), getPositions(), pose);
   }
 
+  public void reset(){
+    swerveOdometry.resetPosition(new Rotation2d(0), pos, new Pose2d(0,0, new Rotation2d(0)));
+  }
+
   public SwerveModuleState[] getStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
     for (SwerveModule mod : mSwerveMods) {
@@ -117,10 +121,12 @@ public class Swerve extends SubsystemBase {
     return (Constants.Swerve.invertGyro) ? Rotation2d.fromDegrees(360 - averageAngle) : Rotation2d.fromDegrees(averageAngle);
   }
 
-  public double getRoll(){
-  //  double averagerRoll = gyro1.getRoll() + gyro2.getRoll() + gyro3.getRoll() + gyro4.getRoll();
-  //  return averagerRoll/4;
-    return gyro1.getRoll();
+  public double getFrontRoll(){
+    return (gyro1.getRoll() + gyro2.getRoll())/2;
+  }
+
+  public double getBackRoll(){
+    return (gyro3.getRoll() + gyro4.getRoll())/2;
   }
 
   @Override
@@ -137,5 +143,7 @@ public class Swerve extends SubsystemBase {
       SmartDashboard.putNumber(
           "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
   }
+
+  SmartDashboard.putNumber("ROLL", getFrontRoll());
 }
 }

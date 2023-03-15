@@ -12,14 +12,13 @@ public class balance extends CommandBase{
     Swerve drive;
     double output;
     double balanceSpeed = 0.1;
-    double currentPitch;
+    double currentFrontPitch, currentBackPitch;
     double last, error;
     SetPointPID balancePID;
-    double p = 14;
+    double p = 5;
     double i = 0;
     double d = 0;
-    double settle = 0.5;//degrees
-    double aboard = 1.5;
+    double settle = 1.5;//degrees
     double define;
 
     public balance(Swerve swerve){
@@ -28,27 +27,32 @@ public class balance extends CommandBase{
     }
     @Override
     public void initialize() {
-        last = 0;
+        last = drive.getFrontRoll();
     }
 
     @Override
     public void execute() {
-        currentPitch = drive.getRoll();
-        define = currentPitch > 0 ? 1:-1;
-
-        error = last - currentPitch;
-
+        currentFrontPitch = drive.getFrontRoll();
+        error = currentFrontPitch - last;
+        define = currentFrontPitch > 0 ? 1:-1;
         balancePID = new SetPointPID(p, i, d, 0, 1);
         output =MathUtility.clamp(balancePID.calculate(error), -0.5, 0.5);
-        if(Math.abs(currentPitch) >= aboard){
-            drive.drive(new Translation2d(define*Math.abs(output), 0), 0, false, false);
-        }
 
-        SmartDashboard.putNumber("PITCH", currentPitch);
+        if(Math.abs(error) > 10){
+            drive.drive(new Translation2d(output, 0), 0, false, true);
+        }else{
+            drive.drive(new Translation2d(define*0.01, 0), 0, false, true);
+        }
+       
+
+        
+
+
+        SmartDashboard.putNumber("PITCH", currentFrontPitch);
         SmartDashboard.putNumber("rollError", error);
         SmartDashboard.putNumber("balanceOutput", output);
 
-        last = currentPitch;
+        last = currentFrontPitch;
 
 
     }
