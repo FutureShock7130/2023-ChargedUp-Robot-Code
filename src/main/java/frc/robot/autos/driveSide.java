@@ -17,7 +17,7 @@ public class driveSide extends CommandBase{
     double d = 0.5;
     double output;
     PID sidePID;
-    double settle = 0.001;//😱😱😱😱
+    double settle = 0.05;//😱😱😱😱
 
     public driveSide(Swerve swerve, double targetDis){
         drive = swerve;

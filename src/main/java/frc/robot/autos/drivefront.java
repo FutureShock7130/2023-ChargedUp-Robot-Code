@@ -17,7 +17,7 @@ public class drivefront extends CommandBase{
     double d = 0.5;
     double output;
     PID frontPID;
-    double settle = 0.001;//😱😱😱😱
+    double settle = 0.05;//😱😱😱😱
 
     public drivefront(Swerve swerve, double targetDis){
         drive = swerve;
