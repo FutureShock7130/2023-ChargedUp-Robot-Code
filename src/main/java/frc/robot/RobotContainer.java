@@ -44,7 +44,7 @@ public class RobotContainer {
 
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
-  //private final Index index = new Index();
+  private final Index index = new Index();
   private final ApriltagSubsystem apriltag = new ApriltagSubsystem();
   //private final Upper Superstructure = new Upper();
   // private final Intake iIntake = new Intake();
