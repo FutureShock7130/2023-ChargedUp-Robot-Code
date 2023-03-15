@@ -8,7 +8,6 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
@@ -126,14 +125,14 @@ public class Upper extends SubsystemBase {
 
 
         updateStates(stringError, elbowError);
-        SmartDashboard.putNumber("elbow abs pos", elbowEncoder.getAbsolutePosition());
-        SmartDashboard.putNumber("string enc pos", stringEncoder.getPosition());
-        SmartDashboard.putNumber("elbow error ", elbowError);
-        SmartDashboard.putNumber("elbow out ", elbowPID.calculate(elbowError));
-        SmartDashboard.putNumber("string error", stringError);
-        SmartDashboard.putNumber("string out ", stringPID.calculate(stringError));
-        SmartDashboard.putBoolean("sting settled", stringSettled);
-        SmartDashboard.putBoolean("elbow is outside ", elbowIsOutside);
+        // SmartDashboard.putNumber("elbow abs pos", elbowEncoder.getAbsolutePosition());
+        // SmartDashboard.putNumber("string enc pos", stringEncoder.getPosition());
+        // SmartDashboard.putNumber("elbow error ", elbowError);
+        // SmartDashboard.putNumber("elbow out ", elbowPID.calculate(elbowError));
+        // SmartDashboard.putNumber("string error", stringError);
+        // SmartDashboard.putNumber("string out ", stringPID.calculate(stringError));
+        // SmartDashboard.putBoolean("sting settled", stringSettled);
+        // SmartDashboard.putBoolean("elbow is outside ", elbowIsOutside);
         stringSet(stringPID.calculate(stringError));
         elbowSet(elbowPID.calculate(elbowError));
     }

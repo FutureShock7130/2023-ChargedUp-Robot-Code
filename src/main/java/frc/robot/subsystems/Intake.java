@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
@@ -153,12 +152,12 @@ public class Intake extends SubsystemBase{
 
         lastTime = Timer.getFPGATimestamp();
 
-        SmartDashboard.putBoolean("tileter limit", limitSwitch.get());
-        SmartDashboard.putNumber("tilterPos", tilter.getSelectedSensorPosition());
-        SmartDashboard.putNumber("tilterError", tilterError);
-        SmartDashboard.putNumber("tilter out ", out);
-        SmartDashboard.putBoolean("isClamped", isClampped);
-        SmartDashboard.putNumber("currentTarget", currentTilterTarget);
+        // SmartDashboard.putBoolean("tileter limit", limitSwitch.get());
+        // SmartDashboard.putNumber("tilterPos", tilter.getSelectedSensorPosition());
+        // SmartDashboard.putNumber("tilterError", tilterError);
+        // SmartDashboard.putNumber("tilter out ", out);
+        // SmartDashboard.putBoolean("isClamped", isClampped);
+        // SmartDashboard.putNumber("currentTarget", currentTilterTarget);
     }
 
     void updateStates(){
