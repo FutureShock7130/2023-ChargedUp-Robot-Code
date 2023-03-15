@@ -14,18 +14,17 @@ public class turn extends CommandBase {
     double rotateTarget;
     double currentRotation;
     double error;
-    double settle = 10;//😱😱😱😱😱
+    double settle = 5;//😱😱😱😱😱//degrees
     double output;
-    double p, i, d;
+    double p = 0.001;
+    double i = 0;
+    double d = 0;
     PID turnPID;
     
 
-    public turn(Swerve swerve, double targetDegrees, double kp, double ki, double kd){
+    public turn(Swerve swerve, double targetDegrees){
         rotateTarget = targetDegrees;
         drive = swerve;
-        p = kp;
-        i = ki;
-        d = kd;
         addRequirements(swerve);
     }
 
