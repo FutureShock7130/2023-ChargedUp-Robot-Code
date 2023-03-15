@@ -97,10 +97,9 @@ public class RobotContainer {
       //   index.shootByState();
       //   Timer.delay(1);
       // }),
-      new drivefront(s_Swerve, 5),
-      new turnForTime(s_Swerve, 1.25, 2.7),
-      new drivefront(s_Swerve, 0.5)
-      
+      new driveForTime(s_Swerve, 4, -1),
+      new turnForTime(s_Swerve, 1.25, 2.7),//180
+      new sideForTime(s_Swerve, 2, 1)
     );
     // return new SequentialCommandGroup(
     //   new indexAuto(index, indexStates.AimTop),

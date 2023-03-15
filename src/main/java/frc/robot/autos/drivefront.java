@@ -73,7 +73,7 @@ public class drivefront extends CommandBase{
     @Override
     public void end(boolean interrupted) {
         drive.drive(new Translation2d(0, 0), 0, false, false);
-        drive.reset();
+        drive.resetOdometry(new Pose2d(0,0, new Rotation2d(0)));
     }
 
 
