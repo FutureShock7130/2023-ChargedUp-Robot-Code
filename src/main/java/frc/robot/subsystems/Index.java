@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -31,6 +32,7 @@ public class Index extends SubsystemBase {
   private DigitalInput limitSwitch = new DigitalInput(1);
 
   private PID tilterPID = new PID(0.00005, 0, 0.00005, 0, 0);
+  private Timer time;
 
   private boolean isClamped = true;
   private boolean shoot = false;
@@ -77,7 +79,7 @@ public class Index extends SubsystemBase {
     if (shoot) shoot(-1);
     if (limitSwitch.get() && tilter.getSelectedSensorVelocity() > 0) tilter.set(0);
     if (tilter.getSelectedSensorPosition() <= tilterPos.downlimit && tilter.getSelectedSensorVelocity() < 0) tilter.set(0);
-    if (desirePos == indexPos.Up && !limitSwitch.get() && tilterPos.upLimit - currentTilterPos < 1500) tilter.set(0.1);
+    if (desirePos == indexPos.Up && !limitSwitch.get() && tilterPos.upLimit - currentTilterPos < 2500) tilter.set(0.15);
 
     SmartDashboard.putBoolean("Intake isClamped", isClamped);
     SmartDashboard.putBoolean("Intake atUpLimit", limitSwitch.get());
@@ -93,8 +95,6 @@ public class Index extends SubsystemBase {
   public void shoot(double speed) {
     setRollers(MathUtility.clamp(speed, -1, 1));
     new betterDelay(1);
-    shoot = false;
-    setState(indexStates.Standby);
   }
 
   public void clamp() {
@@ -145,11 +145,11 @@ public class Index extends SubsystemBase {
         break;
       case Down:
         desirePos = indexPos.Down;
-        tilter.set(ControlMode.PercentOutput, MathUtility.clamp(tilterPID.calculate(tilterPos.downlimit - currentTilterPos), -0.3, 0.3));
+        tilter.set(ControlMode.PercentOutput, MathUtility.clamp(tilterPID.calculate(tilterPos.downlimit - currentTilterPos), -0.27, 0.27));
         break;
       case GridCom:
         desirePos = indexPos.GridCom;
-        tilter.set(ControlMode.PercentOutput, MathUtility.clamp(tilterPID.calculate(tilterPos.inCom - currentTilterPos), -0.3, 0.3));
+        tilter.set(ControlMode.PercentOutput, MathUtility.clamp(tilterPID.calculate(tilterPos.inCom - currentTilterPos), -0.17, 0.17));
       default:
         break;
     }
@@ -160,7 +160,7 @@ public class Index extends SubsystemBase {
       case Indexing:
         setTilterPosAuto(indexPos.Down);
         setRollers(0.28);
-        unclamp();
+        if (MathUtility.isWithin(tilter.getSelectedSensorPosition(), tilterPos.downlimit - 1000, tilterPos.downlimit + 1000)) unclamp();
         break;
       case IndexHuman:
         clamp();
