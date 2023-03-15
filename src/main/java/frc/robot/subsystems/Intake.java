@@ -181,9 +181,8 @@ public class Intake extends SubsystemBase{
 
     public void setTilter (double speed){
         speed = MathUtility.clamp(speed, -0.3, 0.3);
-        if (limitSwitch.get() && speed > 0) {
-            tilter.set(0);
-        }
+        if (limitSwitch.get() && speed > 0) tilter.set(0);
+        //else if (its in down position and u want to set it to go down) set 0
         else tilter.set(speed);
     }
 

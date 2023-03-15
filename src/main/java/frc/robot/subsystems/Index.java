@@ -86,8 +86,9 @@ public class Index extends SubsystemBase {
   }
 
   void setTilter(double speed) {
-    if (tilter.getSelectedSensorPosition() <= tilterPos.downlimit && tilter.getSelectedSensorVelocity() < 0) tilter.set(0);
-    tilter.set(speed);
+    if (tilter.getSelectedSensorPosition() <= tilterPos.downlimit && speed < 0) tilter.set(0);
+    else if (limitSwitch.get() && speed > 0) tilter.set(0);
+    else tilter.set(speed);
   }
 
   public void setRollers(double speed) {
