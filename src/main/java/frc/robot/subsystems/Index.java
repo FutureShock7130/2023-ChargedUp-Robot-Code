@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -57,7 +58,7 @@ public class Index extends SubsystemBase {
   public static class tilterPos {
     public static double upLimit = 0;
     public static double upSmoothPoint = -3564;
-    public static double downlimit = -26000;
+    public static double downlimit = -28000;
     public static double inCom = -6900;
   }
 
@@ -162,6 +163,8 @@ public class Index extends SubsystemBase {
     }
   }
 
+  private double counter = 0;
+
   public void updateStates() {
     switch (state) {
       case Indexing:
@@ -197,8 +200,12 @@ public class Index extends SubsystemBase {
       case Standby:
         clamp();
         setRollers(0);
-        setTilterPosAuto(indexPos.Up);
-        lastState = indexStates.Standby;
+        counter++;
+        if (counter > 10) {
+          setTilterPosAuto(indexPos.Up);
+          lastState = indexStates.Standby;
+          counter = 0;
+        }
       default:
         break;
     }
