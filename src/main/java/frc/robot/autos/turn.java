@@ -43,7 +43,7 @@ public class turn extends CommandBase {
         
         SmartDashboard.putNumber("autoTurnYaw", currentRotation);
         SmartDashboard.putNumber("autoTurnOutput", output);
-        SmartDashboard.putNumber("turnError",rotateTarget - currentRotation);
+        SmartDashboard.putNumber("autoTurnError",rotateTarget - currentRotation);
     }
 
     @Override

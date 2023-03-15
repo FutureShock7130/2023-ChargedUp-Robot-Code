@@ -38,6 +38,7 @@ public class driveSide extends CommandBase{
 
         SmartDashboard.putNumber("autoSideY", currentDistance);
         SmartDashboard.putNumber("autoSideOutput", output);
+        SmartDashboard.putNumber("autoSideError", targetDis - currentDistance);
     }
 
     @Override
