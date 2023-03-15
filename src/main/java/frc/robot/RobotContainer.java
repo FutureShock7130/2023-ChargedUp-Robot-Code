@@ -88,15 +88,15 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     
     return new SequentialCommandGroup(
-      // new indexAuto(index, indexStates.AimTop),
-      // new betterDelay(0.5),
+      new indexAuto(index, indexStates.AimTop),
+      new betterDelay(0.5),
 
 
-      // new InstantCommand(()->{
-      //   index.shootByState();
-      //   Timer.delay(1);
-      // }),
-      new balance(s_Swerve)
+      new InstantCommand(()->{
+        index.shootByState();
+        Timer.delay(1);
+      }),
+      new drivefront(s_Swerve, 1)
     );
     // return new SequentialCommandGroup(
     //   new indexAuto(index, indexStates.AimTop),

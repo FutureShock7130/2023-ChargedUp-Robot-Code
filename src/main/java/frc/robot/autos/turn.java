@@ -10,6 +10,7 @@ import frc.ChenryLib.MathUtility;
 import frc.ChenryLib.PID;
 import frc.ChenryLib.SetPointPID;
 import frc.ChenryLib.SettledUtility;
+import frc.lib.vision.settle;
 import frc.robot.subsystems.Swerve;
 
 public class turn extends CommandBase {
@@ -18,7 +19,7 @@ public class turn extends CommandBase {
     double currentRotation;
     double error;
     double output;
-    double p = 0.001;
+    double p = 5;
     double i = 0;
     double d = 0;
     SetPointPID turnPID;
