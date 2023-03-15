@@ -9,13 +9,15 @@ import frc.robot.subsystems.Swerve;;
 public class balance extends CommandBase{
     Swerve drive;
     double output;
-    double balance = 0;
+    double balanceSpeed = 0.01;
     double currentPitch;
     PID balancePID;
     double p = 0.0001;
     double i = 0;
     double d = 0;
-    double settle = 0.01;
+    double settle = 1;//degrees
+    double aboard = 5;
+    double define;
 
     public balance(Swerve swerve){
         drive = swerve;
@@ -28,24 +30,21 @@ public class balance extends CommandBase{
 
     @Override
     public void execute() {
-        balancePID = new PID(p, i, d, balance, 1);
         currentPitch = drive.getPitch();
-        output = balancePID.calculate(balance - currentPitch);
+        define = currentPitch > 0 ? 1:-1;
+        if(Math.abs(currentPitch) >= aboard){
+            drive.drive(new Translation2d(define*balanceSpeed, 0), 0, false, false);
+        }
 
-        drive.drive(new Translation2d(output, 0), 0, false, true);
-
-        SmartDashboard.putNumber("balanceError", balance - currentPitch);
-        SmartDashboard.putNumber("balanceOutput", output);
-        SmartDashboard.putNumber("balancePitch", currentPitch);
     }
 
     @Override
     public boolean isFinished() {
-        if(Math.abs(balance - currentPitch) <= settle){
-            return true;
-        }else{
-            return false;
-        }
+      if(Math.abs(currentPitch) <= settle){
+        return true;
+      }else{
+        return false;
+      }
     }
 
     @Override
