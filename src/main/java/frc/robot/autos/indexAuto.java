@@ -2,6 +2,7 @@ package frc.robot.autos;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.ChenryLib.SettledUtility;
+import frc.lib.vision.settle;
 import frc.robot.subsystems.Index;
 import frc.robot.subsystems.Index.indexStates;
 import frc.robot.subsystems.Index.tilterPos;
@@ -13,7 +14,7 @@ public class indexAuto extends CommandBase{
     double error;
     boolean finish;
     indexStates states;
-    SettledUtility settled;
+    settle ok = new settle();
 
     public indexAuto(Index index, indexStates states){
         this.index = index;
@@ -46,10 +47,8 @@ public class indexAuto extends CommandBase{
         }
 
         error = desired - current;
-        settled = new SettledUtility(60, error, 10);
-
-        finish = settled.isSettled(error);
-
+        
+        finish = ok.OKsettle(error, 10);
     }
 
     @Override
