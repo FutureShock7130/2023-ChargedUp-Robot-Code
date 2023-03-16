@@ -89,6 +89,29 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     
     return new SequentialCommandGroup(
+
+    new InstantCommand(()->{
+      index.setState(indexStates.AimTop);
+      Timer.delay(0.5);
+    }),
+    new ShootFor1s(index),
+    new driveSide(s_Swerve, 0.2),
+    new betterDelay(0.05),
+    new drivefront(s_Swerve, 2.6896),
+    new betterDelay(0.05),
+    new turnForTime(s_Swerve, 1.25, 2.7),
+    new betterDelay(0.05),
+    new ParallelCommandGroup(
+      new InstantCommand(()->{
+        index.setState(indexStates.Indexing);
+        Timer.delay(1);
+      }),
+      new drivefront(s_Swerve, -3)
+    ),
+    new indexSetState(index, indexStates.Standby),
+    new driveSide(s_Swerve, 1.5),//右邊是正向，以機器人前方為準😱😱
+    new turnForTime(s_Swerve, 1.25, 2.7),
+    new drivefront(s_Swerve, -1.2192)
       // new indexAuto(index, indexStates.AimTop),
       // new betterDelay(0.5),
 

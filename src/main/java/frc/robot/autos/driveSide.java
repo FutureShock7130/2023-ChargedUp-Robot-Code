@@ -16,9 +16,9 @@ public class driveSide extends CommandBase{
     double targetDis;
     double currentDistance;
     double error;
-    double p = 1.2;
-    double i = 0.001;
-    double d = 0.5;
+    double p = 3.55;
+    double i = 0.8;
+    double d = 0;
     double output;
     boolean finish;
     PID sidePID;
