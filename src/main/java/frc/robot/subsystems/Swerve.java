@@ -39,9 +39,6 @@ public class Swerve extends SubsystemBase {
     zeroGyro();
 
     swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getYaw(), pos);
-    swerveOdometry.resetPosition(getYaw(), getPositions(), new Pose2d(0, 0, new Rotation2d(0)));
-
-
 
     mSwerveMods =
         new SwerveModule[] {
@@ -86,10 +83,8 @@ public class Swerve extends SubsystemBase {
   }
 
   public void resetOdometry(Pose2d pose) {
-    swerveOdometry.resetPosition(getYaw(), getPositions(), pose);
+    swerveOdometry.resetPosition(getYaw(), pos, pose);
   }
-
-
 
 
   public SwerveModuleState[] getStates() {
