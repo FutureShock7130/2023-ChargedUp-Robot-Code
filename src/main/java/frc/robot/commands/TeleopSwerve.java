@@ -60,8 +60,8 @@ public class TeleopSwerve extends CommandBase {
     }
     
     if (xJoystick.getStartButton()) fieldOriented = !fieldOriented;  
-    // if (xJoystick.getBackButton()) s_Swerve.zeroGyro();
-    if (xJoystick.getBackButton()) s_Swerve.resetOdometry(new Pose2d());
+    if (xJoystick.getBackButton()) s_Swerve.zeroGyro(); 
+    // if (xJoystick.getBackButton()) s_Swerve.resetOdometry(new Pose2d());
 
     int thing = fieldOriented ? 1 : 0;
     SmartDashboard.putNumber("fo ", thing);
@@ -70,5 +70,7 @@ public class TeleopSwerve extends CommandBase {
         new Translation2d(translationVal, strafeVal).times(Constants.Swerve.maxSpeed),
         rotationVal * Constants.Swerve.maxAngularVelocity, fieldOriented,
         true);
+
+    SmartDashboard.putBoolean("isOriented", fieldOriented);
   }
 }

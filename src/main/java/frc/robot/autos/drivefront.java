@@ -16,7 +16,7 @@ public class drivefront extends CommandBase{
     double targetDis;
     double currentDistance;
     double error;
-    double p = 3.55;
+    double p = 1.55;
     double i = 0.8;
     double d = 0;
     double output;

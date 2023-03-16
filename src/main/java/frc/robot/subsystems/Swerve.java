@@ -132,17 +132,17 @@ public class Swerve extends SubsystemBase {
 
     SmartDashboard.putNumber("gyro ", getYaw().getDegrees());
 
-    for (SwerveModule mod : mSwerveMods) {
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Cancoder", mod.getAngle().getDegrees());
+  //   for (SwerveModule mod : mSwerveMods) {
+  //     SmartDashboard.putNumber(
+  //         "Mod " + mod.moduleNumber + " Cancoder", mod.getAngle().getDegrees());
 
-      SmartDashboard.putNumber(
-          "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
-  }
+  //     SmartDashboard.putNumber(
+  //         "Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);
+  // }
 
-  SmartDashboard.putNumber("ROLL", getFrontRoll());
+  // SmartDashboard.putNumber("ROLL", getFrontRoll());
 
-  System.out.println("Gyro: " + getYaw().getDegrees());
-  System.out.println(swerveOdometry.getPoseMeters().getY() + ", " + swerveOdometry.getPoseMeters().getX() + ", " + swerveOdometry.getPoseMeters().getRotation().getDegrees());
+  // System.out.println("Gyro: " + getYaw().getDegrees());
+  // System.out.println(swerveOdometry.getPoseMeters().getY() + ", " + swerveOdometry.getPoseMeters().getX() + ", " + swerveOdometry.getPoseMeters().getRotation().getDegrees());
 }
 }

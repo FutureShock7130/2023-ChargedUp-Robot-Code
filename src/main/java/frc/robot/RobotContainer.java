@@ -19,6 +19,7 @@ import frc.lib.vision.*;
 import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Index.indexPos;
 import frc.robot.subsystems.Index.indexStates;
 
 /**
@@ -96,34 +97,50 @@ public class RobotContainer {
 
     new InstantCommand(()->{
       index.setState(indexStates.AimTop);
-      Timer.delay(0.25);
+      Timer.delay(1);
     }),
     new ShootFor1s(index),
 
-    new driveSide(s_Swerve, -0.3),//check
-    new betterDelay(0.05),
-    new drivefront(s_Swerve, 2.6896),
-    new betterDelay(0.05),
+    // new driveSide(s_Swerve, -0.05),//check
+    new sideForTime(s_Swerve, 1, -0.5),//front view: y- left
+    new betterDelay(0.1),
+    new driveForTime(s_Swerve, 3, 1),//front view: x- forward
 
     new turnForTime(s_Swerve, 1.25, 2.7),
-    new betterDelay(0.05),
 
-    new ParallelCommandGroup(
-      new InstantCommand(()->{
-        index.setState(indexStates.Indexing);
-      }),
-      new drivefront(s_Swerve, -3)
-    ),
+    new driveForTime(s_Swerve, 1.5, -1),
+    new InstantCommand(()->{
+      index.setState(indexStates.Indexing);
+      Timer.delay(2);
+    }),
     new InstantCommand(()->{
       index.setState(indexStates.Standby);
-      Timer.delay(0.25);
+      Timer.delay(0.5);
     }),
-    new driveSide(s_Swerve, -1.5494),//right is positive (robot head is forward side)
+    new sideForTime(s_Swerve, 2, -1),
 
     new turnForTime(s_Swerve, 1.25, 2.7),
     
-    new drivefront(s_Swerve, -2.2098),
-    new drivefront(s_Swerve, 1)
+    new driveForTime(s_Swerve, 3, -1)
+
+    // new betterDelay(0.05),
+
+    // new ParallelCommandGroup(
+    //   new InstantCommand(()->{
+    //     index.setState(indexStates.Indexing);
+    //   }),
+    //   new drivefront(s_Swerve, -3)
+    // ),
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.Standby);
+    //   Timer.delay(0.25);
+    // }),
+    // new driveSide(s_Swerve, -1.5494),//right is positive (robot head is forward side)
+
+    // new turnForTime(s_Swerve, 1.25, 2.7),
+    
+    // new drivefront(s_Swerve, -2.2098),
+    // new drivefront(s_Swerve, 1)
 
 
       // new indexAuto(index, indexStates.AimTop),

@@ -57,7 +57,7 @@ public class Index extends SubsystemBase {
   public static class tilterPos {
     public static double upLimit = 0;
     public static double upSmoothPoint = -3564;
-    public static double downlimit = -28000;
+    public static double downlimit = -29000;
     public static double inCom = -6900;
   }
 

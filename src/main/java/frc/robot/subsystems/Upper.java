@@ -78,7 +78,7 @@ public class Upper extends SubsystemBase {
     }
 
     static class limits {
-        static double elbowback = 80;
+        static double elbowback = 64;
         static double elbowforward = 350;
         static double stringup = 0;
         static double stringdown = 1500;
@@ -188,35 +188,35 @@ public class Upper extends SubsystemBase {
         else stringIsInside = false;   
     }
 
-    public void elbowSet(double value) {
-        // negative -> out
-        // positive -> in
-        if (elbowEncoder.getAbsolutePosition() <= limits.elbowback && value > 0) 
-            elbowLeft.set(0);
-        else if (elbowEncoder.getAbsolutePosition() >= limits.elbowforward && value < 0) 
-            elbowLeft.set(0);
-        else 
-            value = MathUtility.clamp(value, -1, 1);
-            elbowLeft.set(value);
-    }
-
     void setElbowTarget(double target) {
         currentElbowTarget = target;
+    }
+
+        public void elbowSet(double value) {
+        // negative -> out
+        // positive -> in
+        // if (elbowEncoder.getAbsolutePosition() <= limits.elbowback && value > 0) 
+        //     elbowLeft.set(0);
+        // else if (elbowEncoder.getAbsolutePosition() >= limits.elbowforward && value < 0) 
+        //     elbowLeft.set(0);
+        // else 
+        //     value = MathUtility.clamp(value, -1, 1);
+            elbowLeft.set(value);
     }
 
     public void stringSet(double value) {
         // negative -> release
         // positive -> retract
-        value = MathUtility.clamp(value, -1, 1);
-        if (stringEncoder.getPosition() > 1500 && value < 0){
-            stringboi.set(0);
-        }
-        else if (stringEncoder.getPosition() < 0 && value > 0){
-            stringboi.set(0);
-        }
-        else {
+        // value = MathUtility.clamp(value, -1, 1);
+        // if (stringEncoder.getPosition() > 1500 && value < 0){
+        //     stringboi.set(0);
+        // }
+        // else if (stringEncoder.getPosition() < 0 && value > 0){
+        //     stringboi.set(0);
+        // }
+        // else {
             stringboi.set(value);
-        }
+        
         
     }
 
