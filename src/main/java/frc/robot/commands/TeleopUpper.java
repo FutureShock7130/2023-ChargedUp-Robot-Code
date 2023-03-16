@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
+import frc.robot.Constants.JoystickConstants;
 import frc.robot.subsystems.Upper;
 import frc.robot.subsystems.Upper.States;
 
@@ -14,12 +15,14 @@ public class TeleopUpper extends CommandBase {
   private Upper superstructure;
   private XboxController controller;
   private XboxController operator;
+  private Joystick testJoystick;
 
-  public TeleopUpper(Upper iSuperstructure, XboxController controller, XboxController operator) {
+  public TeleopUpper(Upper iSuperstructure, XboxController controller, XboxController operator, Joystick joystick) {
     this.superstructure = iSuperstructure;
     addRequirements(iSuperstructure);
     this.controller = controller;
     this.operator = operator;
+    testJoystick = joystick;
   }
 
   @Override
@@ -28,10 +31,14 @@ public class TeleopUpper extends CommandBase {
     // if (controller.getYButton()) superstructure.setStates(States.human);
     // if (controller.getBButton()) superstructure.setStates(States.coneMid);
     // if (controller.getAButton()) superstructure.setStates(States.down);
-    // if (controller.getXButton()) superstructure.setStates(States.placing);
-    superstructure.elbowSet(operator.getRightY());
-    if (operator.getLeftTriggerAxis() > 0.4) superstructure.stringSet(operator.getLeftTriggerAxis());
-    else if (operator.getRightTriggerAxis() > 0.4) superstructure.stringSet(-operator.getRightTriggerAxis());
+    // // if (controller.getXButton()) superstructure.setStates(States.placing);
+  
+    // superstructure.elbowSet(operator.getRightY());
+    // if (operator.getLeftTriggerAxis() > 0.4) superstructure.stringSet(operator.getLeftTriggerAxis());
+    // else if (operator.getRightTriggerAxis() > 0.4) superstructure.stringSet(-operator.getRightTriggerAxis());
+
+    superstructure.elbowSet(testJoystick.getRawAxis(JoystickConstants.leftStick_Y)*0.1);
+    superstructure.stringSet(testJoystick.getRawAxis(JoystickConstants.rightStick_Y)*0.1);
 
     // driver
     // if (controller.getPOV() == 0) superstructure.setStates(States.human);
