@@ -47,16 +47,18 @@ public class Upper extends SubsystemBase {
     boolean elbowIsOutside = false;
     boolean stringIsInside = true;
 
+    // Tested Pos
     private static class elbowPos {
-        static double mid = 71;
+        static double coneMid = 71;
         static double down = 155;
         static double human = 60; //untested 🙌🙌🙌🙌
         static double placing = 75; //untested🙌🙌🙌🙌
         static double outside = 75;
     }
 
+    // Tested Pos
     private static class stringPos {
-        static double mid = 460;
+        static double coneMid = 460;
         static double down = 0;
         static double human = 1900; //untested 😒😒😒😒😒
     }
@@ -113,9 +115,9 @@ public class Upper extends SubsystemBase {
                 grabberState = grabberStates.standby;
                 break;
             case coneMid:
-                setElbowTarget(elbowPos.mid);
+                setElbowTarget(elbowPos.coneMid);
                 updateStates(stringError, elbowError);
-                if (elbowIsOutside) setStringTarget(stringPos.mid);
+                if (elbowIsOutside) setStringTarget(stringPos.coneMid);
                 if (grabberState != grabberStates.placing) grabberState = grabberStates.standby;
                 break;
             case human:
@@ -138,15 +140,14 @@ public class Upper extends SubsystemBase {
 
         switch (grabberState){
             case intake:
-                grabberSpeed = 0.5;
+                grabberSpeed = 0.1;
             case standby:
-                grabberSpeed = 0.05;
+                grabberSpeed = 0;
             case placing:
-                grabberSpeed = -1;
+                grabberSpeed = -0.4;
         }
 
         lastState = state;
-
 
         updateStates(stringError, elbowError);
         SmartDashboard.putNumber("elbow abs pos", elbowEncoder.getAbsolutePosition());
@@ -155,9 +156,8 @@ public class Upper extends SubsystemBase {
         SmartDashboard.putNumber("elbow out ", elbowPID.calculate(elbowError));
         SmartDashboard.putNumber("string error", stringError);
         SmartDashboard.putNumber("string out ", stringPID.calculate(stringError));
-        SmartDashboard.putBoolean("sting settled", stringSettled);
+        SmartDashboard.putBoolean("string settled", stringSettled);
         SmartDashboard.putBoolean("elbow is outside ", elbowIsOutside);
-        
         
         //stringSet(stringPID.calculate(stringError)); //😢😢😢😢😢😢😢😢
         elbowSet(elbowPID.calculate(elbowError)); 
@@ -177,8 +177,7 @@ public class Upper extends SubsystemBase {
         else elbowIsOutside = false;
         
         if (stringEncoder.getPosition() < 50) stringIsInside = true;
-        else stringIsInside = false;
-        
+        else stringIsInside = false;   
     }
 
     public void elbowSet(double value) {
