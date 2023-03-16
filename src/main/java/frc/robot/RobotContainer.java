@@ -89,6 +89,13 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     
     return new SequentialCommandGroup(
+
+    new driveSide(s_Swerve, 0.2),
+    new drivefront(s_Swerve, 2.6896),
+    new turnForTime(s_Swerve, 1.25, 2.7),
+    new drivefront(s_Swerve, -3),
+    new driveSide(s_Swerve, 1.5),//右邊是正向，以機器人前方為準😱😱
+    new drivefront(s_Swerve, -1.2192)
       // new indexAuto(index, indexStates.AimTop),
       // new betterDelay(0.5),
 
@@ -97,9 +104,9 @@ public class RobotContainer {
       //   index.shootByState();
       //   Timer.delay(1);
       // }),
-      new driveForTime(s_Swerve, 4, -1),
-      new turnForTime(s_Swerve, 1.25, 2.7),//180
-      new sideForTime(s_Swerve, 2, 1)
+      // new driveForTime(s_Swerve, 4, -1),
+      // new turnForTime(s_Swerve, 1.25, 2.7),//180
+      // new sideForTime(s_Swerve, 2, 1)
     );
     // return new SequentialCommandGroup(
     //   new indexAuto(index, indexStates.AimTop),
