@@ -51,8 +51,8 @@ public class Upper extends SubsystemBase {
     private static class elbowPos {
         static double coneMid = 71;
         static double down = 155;
-        static double human = 60; //untested 🙌🙌🙌🙌
-        static double placing = 75; //untested🙌🙌🙌🙌
+        static double human = 60; //untested 
+        static double placing = 75; //
         static double outside = 75;
     }
 
@@ -60,7 +60,7 @@ public class Upper extends SubsystemBase {
     private static class stringPos {
         static double coneMid = 460;
         static double down = 0;
-        static double human = 1900; //untested 😒😒😒😒😒
+        static double human = 1900; //untested
     }
 
     public static enum States {
@@ -127,7 +127,7 @@ public class Upper extends SubsystemBase {
                 grabberState = grabberStates.intake;
                 break;
             case placing:
-                setElbowTarget(elbowPos.placing); //😢🎶🎶🎶😎😢😢😢
+                setElbowTarget(elbowPos.placing); //
                 grabberState = grabberStates.placing;
                 elapsedTime += dt;
                 if (elapsedTime > 1) {
@@ -159,7 +159,7 @@ public class Upper extends SubsystemBase {
         SmartDashboard.putBoolean("string settled", stringSettled);
         SmartDashboard.putBoolean("elbow is outside ", elbowIsOutside);
         
-        //stringSet(stringPID.calculate(stringError)); //😢😢😢😢😢😢😢😢
+        //stringSet(stringPID.calculate(stringError)); //
         elbowSet(elbowPID.calculate(elbowError)); 
         grabberSpeed = MathUtility.clamp(grabberSpeed, -1, 1);
         setGrabberRollers(grabberSpeed);

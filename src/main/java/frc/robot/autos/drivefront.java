@@ -35,7 +35,7 @@ public class drivefront extends CommandBase{
 
     @Override
     public void initialize() {
-        frontPID = new SetPointPID(p, i, d, targetDis, 1);//😱😱😱😱😱
+        frontPID = new SetPointPID(p, i, d, targetDis, 1);//
         startY = drive.getPose().getY();
         startGYRO = drive.getYaw().getRotations();
     }

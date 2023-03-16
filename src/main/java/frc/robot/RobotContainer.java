@@ -7,7 +7,6 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,9 +29,9 @@ import frc.robot.subsystems.Index.indexStates;
  */
 public class RobotContainer {
   /* Controllers */
-  // private final Joystick driver = new Joystick(0);
+  // private finalXboxController driver = newXboxController(0);
   private final XboxController driver = new XboxController(0);
-  private final Joystick operator = new Joystick(1);
+  private final XboxController operator = new XboxController(1);
 
   UsbCamera intakeCamera = CameraServer.startAutomaticCapture();
 
@@ -51,6 +50,7 @@ public class RobotContainer {
   private final Swerve s_Swerve = new Swerve();
   private final Index index = new Index();
   private final ApriltagSubsystem apriltag = new ApriltagSubsystem();
+  private final Upper upper = new Upper();
   //private final Upper Superstructure = new Upper();
   // private final Intake iIntake = new Intake();
   //private final TeleopSwerve driverSwerve = new TeleopSwerve(s_Swerve, -driver.getRawAxis(translationAxis), driver.getRawAxis(strafeAxis), driver.getRawAxis(rotationAxis), false);
@@ -65,6 +65,7 @@ public class RobotContainer {
       Boolean ok = fieldShoot.OKshoot(apriltag.getCameratoTarget());
       SmartDashboard.putBoolean("OKshoot", ok);
     }, apriltag));
+    upper.setDefaultCommand(new TeleopUpper(upper, driver, operator, null));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -73,7 +74,7 @@ public class RobotContainer {
   /**
    * Use this method to define your button->command mappings. Buttons can be created by
    * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+   * edu.wpi.first.wpilibj.XboxXboxController} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
@@ -109,7 +110,7 @@ public class RobotContainer {
       new drivefront(s_Swerve, -3)
     ),
     new indexSetState(index, indexStates.Standby),
-    new driveSide(s_Swerve, 1.5),//右邊是正向，以機器人前方為準😱😱
+    new driveSide(s_Swerve, 1.5),//right is positive (robot head is forward side)
     new turnForTime(s_Swerve, 1.25, 2.7),
     new drivefront(s_Swerve, -1.2192)
       // new indexAuto(index, indexStates.AimTop),

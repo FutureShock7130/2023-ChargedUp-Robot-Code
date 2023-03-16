@@ -33,7 +33,7 @@ public class driveSide extends CommandBase{
 
     @Override
     public void initialize() {
-        sidePID = new PID(p, i, d, targetDis, 1);//😱😱😱😱😱
+        sidePID = new PID(p, i, d, targetDis, 1);//
     }
 
     @Override

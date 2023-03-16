@@ -40,19 +40,18 @@ public final class Constants {
   public static final class intake {
     public static final int leftMotorPort = 61;
     public static final int rightMotorPort = 62;
-    public static final int tilterPort = 17; //🙌🙌🙌🙌 motor "stringboi" on phoenix tuner 
+    public static final int tilterPort = 17; // motor "stringboi" on phoenix tuner 
     public static final int solenoidPort = 0;
   }
 
   public static final class Superstructure {
     public static final int talonLeftPort = 14;
     public static final int talonRightPort = 16;
-    public static final int talonStringPort = 17; //🙌🙌🙌🙌 needs update when using new motor
-    public static final int solenoidPort = 1;
+    public static final int talonStringPort = 1; // needs update when using new motor
     public static final int elbowCanCoderPort = 5;
     public static final int stringCanCoderPort = 6;
-    public static final int grabberLeft = 0;
-    public static final int grabberRight = 0;
+    public static final int grabberLeft = 51;
+    public static final int grabberRight = 52;
   }
 
 

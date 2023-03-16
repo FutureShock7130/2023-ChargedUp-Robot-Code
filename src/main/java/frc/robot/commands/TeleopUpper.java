@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import org.apache.commons.collections4.functors.IfClosure;
-
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,21 +31,21 @@ public class TeleopUpper extends CommandBase {
     // if (controller.getAButton()) superstructure.setStates(States.down);
     // // if (controller.getXButton()) superstructure.setStates(States.placing);
   
-    // superstructure.elbowSet(operator.getRightY());
-    // if (operator.getLeftTriggerAxis() > 0.4) superstructure.stringSet(operator.getLeftTriggerAxis());
-    // else if (operator.getRightTriggerAxis() > 0.4) superstructure.stringSet(-operator.getRightTriggerAxis());
+    superstructure.elbowSet(operator.getRightY() * 0.3);
+    if (operator.getLeftTriggerAxis() > 0.4) superstructure.stringSet(operator.getLeftTriggerAxis() * 0.3);
+    else if (operator.getRightTriggerAxis() > 0.4) superstructure.stringSet(-operator.getRightTriggerAxis() * 0.3);
 
-    superstructure.elbowSet(testJoystick.getRawAxis(JoystickConstants.leftStick_Y)*0.1);
-    superstructure.stringSet(testJoystick.getRawAxis(JoystickConstants.rightStick_Y)*0.1);
+    // superstructure.elbowSet(testJoystick.getRawAxis(JoystickConstants.leftStick_Y)*0.1);
+    // superstructure.stringSet(testJoystick.getRawAxis(JoystickConstants.rightStick_Y)*0.1);
 
     // driver
     // if (controller.getPOV() == 0) superstructure.setStates(States.human);
     // if (controller.getPOV() == 90) superstructure.setStates(States.coneMid);
     // if (controller.getPOV() == 180) superstructure.setStates(States.down);
     // if (controller.getPOV() == 270) superstructure.setStates(States.placing);
-    SmartDashboard.putBoolean("human", controller.getPOV() == 0);
-    SmartDashboard.putBoolean("coneMid", controller.getPOV() == 90);
-    SmartDashboard.putBoolean("down", controller.getPOV() == 180);
-    SmartDashboard.putBoolean("placing", controller.getPOV() == 270);
+    // SmartDashboard.putBoolean("human", controller.getPOV() == 0);
+    // SmartDashboard.putBoolean("coneMid", controller.getPOV() == 90);
+    // SmartDashboard.putBoolean("down", controller.getPOV() == 180);
+    // SmartDashboard.putBoolean("placing", controller.getPOV() == 270);
   }
 }

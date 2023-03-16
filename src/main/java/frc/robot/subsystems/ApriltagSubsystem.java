@@ -167,7 +167,7 @@ public class ApriltagSubsystem extends SubsystemBase {
 
 /**
  * If there's no target spooted then the default value is zero.</p>
- * When the robot is near the apriltag there will be a very high possibility that the ambiguity return zero😱😱
+ * When the robot is near the apriltag there will be a very high possibility that the ambiguity return zero
  */
   public double getPoseAmbiguity(){
     return hasTarget() ? mPoseAmbiguity : 0;
