@@ -83,7 +83,7 @@ public class Swerve extends SubsystemBase {
   }
 
   public void resetOdometry(Pose2d pose) {
-    swerveOdometry.resetPosition(getYaw(), pos, pose);
+    swerveOdometry.resetPosition(getYaw(), getPositions(), pose);
   }
 
 
@@ -141,5 +141,8 @@ public class Swerve extends SubsystemBase {
   }
 
   SmartDashboard.putNumber("ROLL", getFrontRoll());
+
+  System.out.println("Gyro: " + getYaw().getDegrees());
+  System.out.println(swerveOdometry.getPoseMeters().getY() + ", " + swerveOdometry.getPoseMeters().getX() + ", " + swerveOdometry.getPoseMeters().getRotation().getDegrees());
 }
 }

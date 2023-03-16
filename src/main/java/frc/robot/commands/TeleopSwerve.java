@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -58,7 +60,8 @@ public class TeleopSwerve extends CommandBase {
     }
     
     if (xJoystick.getStartButton()) fieldOriented = !fieldOriented;  
-    if (xJoystick.getBackButton()) s_Swerve.zeroGyro();
+    // if (xJoystick.getBackButton()) s_Swerve.zeroGyro();
+    if (xJoystick.getBackButton()) s_Swerve.resetOdometry(new Pose2d());
 
     int thing = fieldOriented ? 1 : 0;
     SmartDashboard.putNumber("fo ", thing);
