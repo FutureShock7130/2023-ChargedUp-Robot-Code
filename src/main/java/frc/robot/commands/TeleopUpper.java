@@ -36,7 +36,7 @@ public class TeleopUpper extends CommandBase {
     superstructure.elbowSet(controller.getLeftY() * 0.3);
 
     // String
-    if (controller.getLeftTriggerAxis() > 0.4) superstructure.stringSet(-controller.getLeftTriggerAxis() * 0.5);
+    if (controller.getLeftTriggerAxis() > 0.4) superstructure.stringSet(-controller.getLeftTriggerAxis() * 0.56);
     else if (controller.getRightTriggerAxis() > 0.4) superstructure.stringSet(controller.getRightTriggerAxis() * 0.5);
     else superstructure.stringSet(0);
 
