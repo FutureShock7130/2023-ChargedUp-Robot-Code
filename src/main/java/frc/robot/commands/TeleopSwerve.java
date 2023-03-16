@@ -40,13 +40,13 @@ public class TeleopSwerve extends CommandBase {
     if (xJoystick.getRightBumper()) {
       translationVal =
           translationLimiter.calculate(
-              MathUtil.applyDeadband(xJoystick.getLeftY() * 0.4, Constants.Swerve.stickDeadband));
+              MathUtil.applyDeadband(xJoystick.getLeftY() * 0.5, Constants.Swerve.stickDeadband));
       strafeVal =
           strafeLimiter.calculate(
-              MathUtil.applyDeadband(xJoystick.getLeftX() * 0.4, Constants.Swerve.stickDeadband));
+              MathUtil.applyDeadband(xJoystick.getLeftX() * 0.5, Constants.Swerve.stickDeadband));
       rotationVal =
           rotationLimiter.calculate(
-              MathUtil.applyDeadband(xJoystick.getRightX() * 0.2, Constants.Swerve.stickDeadband));
+              MathUtil.applyDeadband(xJoystick.getRightX() * 0.25, Constants.Swerve.stickDeadband));
     } else {
       translationVal =
           translationLimiter.calculate(

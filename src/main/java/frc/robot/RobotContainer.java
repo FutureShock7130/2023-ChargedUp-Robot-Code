@@ -97,32 +97,29 @@ public class RobotContainer {
 
     new InstantCommand(()->{
       index.setState(indexStates.AimTop);
-      Timer.delay(1);
     }),
+    new betterDelay(0.2),
     new ShootFor1s(index),
 
     // new driveSide(s_Swerve, -0.05),//check
     new sideForTime(s_Swerve, 1, -0.5),//front view: y- left
-    new betterDelay(0.1),
-    new driveForTime(s_Swerve, 3, 1),//front view: x- forward
+    new driveForTime(s_Swerve, 2.75, 1.5),//front view: x- forward
 
     new turnForTime(s_Swerve, 1.25, 2.7),
 
-    new driveForTime(s_Swerve, 1.5, -1),
-    new InstantCommand(()->{
-      index.setState(indexStates.Indexing);
-      Timer.delay(3);
-    }),
-    new betterDelay(0.1),
+    new ParallelCommandGroup(
+      new driveForTime(s_Swerve, 1.25, -1.5),
+      new InstantCommand(()->{
+        index.setState(indexStates.Indexing);
+    })), 
     new InstantCommand(()->{
       index.setState(indexStates.Standby);
-      Timer.delay(0.5);
     }),
-    new sideForTime(s_Swerve, 2, -1),
+    new sideForTime(s_Swerve, 1.5, -1.5),
 
     new turnForTime(s_Swerve, 1.25, 2.7),
 
-    new driveForTime(s_Swerve, 3, -1)
+    new driveForTime(s_Swerve, 2.5, -1.5)
 
     // new betterDelay(0.05),
 
