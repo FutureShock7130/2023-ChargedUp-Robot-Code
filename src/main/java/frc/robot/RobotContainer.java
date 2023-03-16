@@ -51,20 +51,20 @@ public class RobotContainer {
   private final Swerve s_Swerve = new Swerve();
   private final Index index = new Index();
   private final ApriltagSubsystem apriltag = new ApriltagSubsystem();
-  private final Upper upper = new Upper();
+  // private final Upper upper = new Upper();
   //private final Upper Superstructure = new Upper();
   // private final Intake iIntake = new Intake();
   //private final TeleopSwerve driverSwerve = new TeleopSwerve(s_Swerve, -driver.getRawAxis(translationAxis), driver.getRawAxis(strafeAxis), driver.getRawAxis(rotationAxis), false);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver));
-    // index.setDefaultCommand(new TeleopIndex(index, driver));
+    s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver));
+    index.setDefaultCommand(new TeleopIndex(index, driver));
     apriltag.setDefaultCommand(new RunCommand(()->{
       Boolean ok = fieldShoot.OKshoot(apriltag.getCameratoTarget());
       SmartDashboard.putBoolean("OKshoot", ok);
     }, apriltag));
-    upper.setDefaultCommand(new TeleopUpper(upper, driver, operator, null));
+    // upper.setDefaultCommand(new TeleopUpper(upper, driver, operator, null));
 
     // Configure the button bindings
     configureButtonBindings();
@@ -111,8 +111,9 @@ public class RobotContainer {
     new driveForTime(s_Swerve, 1.5, -1),
     new InstantCommand(()->{
       index.setState(indexStates.Indexing);
-      Timer.delay(2);
+      Timer.delay(3);
     }),
+    new betterDelay(0.1),
     new InstantCommand(()->{
       index.setState(indexStates.Standby);
       Timer.delay(0.5);
@@ -120,7 +121,7 @@ public class RobotContainer {
     new sideForTime(s_Swerve, 2, -1),
 
     new turnForTime(s_Swerve, 1.25, 2.7),
-    
+
     new driveForTime(s_Swerve, 3, -1)
 
     // new betterDelay(0.05),

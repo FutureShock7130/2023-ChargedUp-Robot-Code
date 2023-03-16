@@ -77,7 +77,7 @@ public class Index extends SubsystemBase {
     updateStates();
     if (shoot) shoot(-1);
     if (limitSwitch.get() && tilter.getSelectedSensorVelocity() > 0) tilter.set(0);
-    if (!limitSwitch.get() && desirePos == indexPos.Up && tilterPos.upLimit - currentTilterPos < 2500) tilter.set(0.13);
+    if (!limitSwitch.get() && desirePos == indexPos.Up ) tilter.set(0.15);
 
     SmartDashboard.putBoolean("Intake isClamped", isClamped);
     SmartDashboard.putBoolean("Intake atUpLimit", limitSwitch.get());

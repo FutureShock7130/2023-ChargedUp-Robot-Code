@@ -59,8 +59,8 @@ public class TeleopSwerve extends CommandBase {
               MathUtil.applyDeadband(xJoystick.getRightX() * 0.5, Constants.Swerve.stickDeadband));
     }
     
-    if (xJoystick.getStartButton()) fieldOriented = !fieldOriented;  
-    if (xJoystick.getBackButton()) s_Swerve.zeroGyro(); 
+    if (xJoystick.getStartButtonPressed()) fieldOriented = !fieldOriented;  
+    // if (xJoystick.getBackButton()) s_Swerve.zeroGyro(); 
     // if (xJoystick.getBackButton()) s_Swerve.resetOdometry(new Pose2d());
 
     int thing = fieldOriented ? 1 : 0;
