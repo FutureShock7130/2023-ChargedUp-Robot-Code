@@ -43,7 +43,7 @@ public class driveSide extends CommandBase{
         output = MathUtility.clamp(sidePID.calculate(error), -2.5, 2.5);
         // settled = new SettledUtility(100, error, 0.1);
         // finish = settled.isSettled(error);
-        finish = ok.OKsettle(error, 0.01);
+        finish = ok.OKsettle(error, 0.05);
 
         drive.drive(new Translation2d(0, output), 0, false, true);
 

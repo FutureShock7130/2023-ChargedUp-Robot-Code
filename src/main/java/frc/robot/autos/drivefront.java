@@ -47,7 +47,7 @@ public class drivefront extends CommandBase{
         // settled = new SettledUtility(100, error, 0.1);
         output = MathUtility.clamp(frontPID.calculate(error), -2.5, 2.5) ;
         // finish = settled.isSettled(error);
-        finish = ok.OKsettle(error, 0.01);
+        finish = ok.OKsettle(error, 0.05);
 
         drive.drive(new Translation2d(output, 0), 0, false, true);
 

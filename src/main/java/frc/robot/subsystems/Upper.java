@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FollowerType;
 import com.ctre.phoenix.motorcontrol.TalonFXInvertType;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
@@ -149,7 +150,7 @@ public class Upper extends SubsystemBase {
 
         lastState = state;
 
-        updateStates(stringError, elbowError);
+        // updateStates(stringError, elbowError);
         SmartDashboard.putNumber("elbow abs pos", elbowEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("string enc pos", stringEncoder.getPosition());
         SmartDashboard.putNumber("elbow error ", elbowError);
@@ -159,10 +160,10 @@ public class Upper extends SubsystemBase {
         SmartDashboard.putBoolean("string settled", stringSettled);
         SmartDashboard.putBoolean("elbow is outside ", elbowIsOutside);
         
-        //stringSet(stringPID.calculate(stringError)); //
-        elbowSet(elbowPID.calculate(elbowError)); 
-        grabberSpeed = MathUtility.clamp(grabberSpeed, -1, 1);
-        setGrabberRollers(grabberSpeed);
+        // stringSet(stringPID.calculate(stringError)); //
+        // elbowSet(elbowPID.calculate(elbowError)); 
+        // grabberSpeed = MathUtility.clamp(grabberSpeed, -1, 1);
+        // setGrabberRollers(grabberSpeed);
     }
 
     public void setStates (States istate){
@@ -207,7 +208,7 @@ public class Upper extends SubsystemBase {
         currentStringTarget = target;
     }
 
-    void setGrabberRollers(double speed) {
+    public void setGrabberRollers(double speed) {
         grabberLeft.set(MathUtility.clamp(speed, -1, 1));
     }
 

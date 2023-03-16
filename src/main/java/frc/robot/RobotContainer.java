@@ -57,10 +57,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    // iIntake.setDefaultCommand(new TeleopIntake(iIntake, driver, operator));
-    //Superstructure.setDefaultCommand(new TeleopUpper(Superstructure, driver, operator));
-    s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver));
-    index.setDefaultCommand(new TeleopIndex(index, driver));
+    // s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver));
+    // index.setDefaultCommand(new TeleopIndex(index, driver));
     apriltag.setDefaultCommand(new RunCommand(()->{
       Boolean ok = fieldShoot.OKshoot(apriltag.getCameratoTarget());
       SmartDashboard.putBoolean("OKshoot", ok);
@@ -89,30 +87,45 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     
+    //in front view
+    // y+ left 
+    //x- front
+
+    //blue left
     return new SequentialCommandGroup(
 
     new InstantCommand(()->{
       index.setState(indexStates.AimTop);
-      Timer.delay(0.5);
+      Timer.delay(0.25);
     }),
     new ShootFor1s(index),
-    new driveSide(s_Swerve, 0.2),
+
+    new driveSide(s_Swerve, -0.3),//check
     new betterDelay(0.05),
     new drivefront(s_Swerve, 2.6896),
     new betterDelay(0.05),
+
     new turnForTime(s_Swerve, 1.25, 2.7),
     new betterDelay(0.05),
+
     new ParallelCommandGroup(
       new InstantCommand(()->{
         index.setState(indexStates.Indexing);
-        Timer.delay(1);
       }),
       new drivefront(s_Swerve, -3)
     ),
-    new indexSetState(index, indexStates.Standby),
-    new driveSide(s_Swerve, 1.5),//right is positive (robot head is forward side)
+    new InstantCommand(()->{
+      index.setState(indexStates.Standby);
+      Timer.delay(0.25);
+    }),
+    new driveSide(s_Swerve, -1.5494),//right is positive (robot head is forward side)
+
     new turnForTime(s_Swerve, 1.25, 2.7),
-    new drivefront(s_Swerve, -1.2192)
+    
+    new drivefront(s_Swerve, -2.2098),
+    new drivefront(s_Swerve, 1)
+
+
       // new indexAuto(index, indexStates.AimTop),
       // new betterDelay(0.5),
 

@@ -31,9 +31,20 @@ public class TeleopUpper extends CommandBase {
     // if (controller.getAButton()) superstructure.setStates(States.down);
     // // if (controller.getXButton()) superstructure.setStates(States.placing);
   
-    superstructure.elbowSet(operator.getRightY() * 0.3);
-    if (operator.getLeftTriggerAxis() > 0.4) superstructure.stringSet(operator.getLeftTriggerAxis() * 0.3);
-    else if (operator.getRightTriggerAxis() > 0.4) superstructure.stringSet(-operator.getRightTriggerAxis() * 0.3);
+    // Manuals
+    // Elbow
+    superstructure.elbowSet(controller.getLeftY() * 0.3);
+
+    // String
+    if (controller.getLeftTriggerAxis() > 0.4) superstructure.stringSet(-controller.getLeftTriggerAxis() * 0.5);
+    else if (controller.getRightTriggerAxis() > 0.4) superstructure.stringSet(controller.getRightTriggerAxis() * 0.5);
+    else superstructure.stringSet(0);
+
+    // Grabber
+    if (controller.getAButton()) superstructure.setGrabberRollers(0.1); 
+    else if (controller.getBButton()) superstructure.setGrabberRollers(-0.4); 
+    else superstructure.setGrabberRollers(0);
+
 
     // superstructure.elbowSet(testJoystick.getRawAxis(JoystickConstants.leftStick_Y)*0.1);
     // superstructure.stringSet(testJoystick.getRawAxis(JoystickConstants.rightStick_Y)*0.1);
