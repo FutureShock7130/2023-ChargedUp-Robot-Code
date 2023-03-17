@@ -87,87 +87,91 @@ public class RobotContainer {
    */
 
   public Command getAutonomousCommand() {
-    
-    //in front view
-    // y+ left 
-    //x- front
+  
+    /**
+     * front view:
+     * y+  right
+     * x+ back
+     */
 
     //blue left
+    // return new SequentialCommandGroup(
+
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.AimTop);
+    // }),
+    // new betterDelay(0.5),
+    // new ShootFor1s(index),
+    // new sideForTime(s_Swerve, 0.5, 0.5),
+    // new driveForTime(s_Swerve, 3, 1.5),
+    // new turnForTime(s_Swerve, 1.25, 2.7),
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.Indexing);
+    // })
+
+    // //new driveForTime(s_Swerve, 3, 1.5)
+    // );
+
+    // //middle
+    // return new SequentialCommandGroup(
+    //   new InstantCommand(()->{
+    //     index.setState(indexStates.AimTop);
+    //   }),
+    //   new betterDelay(0.5),
+    //   new driveForTime(s_Swerve, 3.5, 1)
+    // );
+
+    // //blue right
+    // return new SequentialCommandGroup(
+
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.AimTop);
+    // }),
+    // new betterDelay(0.5),
+    // new ShootFor1s(index),
+    // new sideForTime(s_Swerve, 0.5, -0.5),
+    // new driveForTime(s_Swerve, 4, 1.5),
+    // new turnForTime(s_Swerve, 1.25, 2.7),
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.Indexing);
+    // })
+
+    // //new driveForTime(s_Swerve, 4, 1.5)
+    // );
+
+    // //red left
+    // return new SequentialCommandGroup(
+
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.AimTop);
+    // }),
+    // new betterDelay(0.5),
+    // new ShootFor1s(index),
+    // new sideForTime(s_Swerve, 0.5, 0.5),
+    // new driveForTime(s_Swerve, 4, 1.5),
+    // new turnForTime(s_Swerve, 1.25, 2.7),
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.Indexing);
+    // })
+    // //new driveForTime(s_Swerve, 4, 1.5)
+    // );
+    
+    //red right
     return new SequentialCommandGroup(
 
     new InstantCommand(()->{
       index.setState(indexStates.AimTop);
     }),
-    new betterDelay(0.2),
+    new betterDelay(0.5),
     new ShootFor1s(index),
-
-    // new driveSide(s_Swerve, -0.05),//check
-    new sideForTime(s_Swerve, 1, -0.5),//front view: y- left
-    new driveForTime(s_Swerve, 2.75, 1.5),//front view: x- forward
-
+    new sideForTime(s_Swerve, 0.5, -0.5),
+    new driveForTime(s_Swerve, 3, 1.5),
     new turnForTime(s_Swerve, 1.25, 2.7),
-
-    new ParallelCommandGroup(
-      new driveForTime(s_Swerve, 1.25, -1.5),
-      new InstantCommand(()->{
-        index.setState(indexStates.Indexing);
-    })), 
     new InstantCommand(()->{
-      index.setState(indexStates.Standby);
-    }),
-    new sideForTime(s_Swerve, 1.5, -1.5),
+      index.setState(indexStates.Indexing);
+    })
 
-    new turnForTime(s_Swerve, 1.25, 2.7),
-
-    new driveForTime(s_Swerve, 2.5, -1.5)
-
-    // new betterDelay(0.05),
-
-    // new ParallelCommandGroup(
-    //   new InstantCommand(()->{
-    //     index.setState(indexStates.Indexing);
-    //   }),
-    //   new drivefront(s_Swerve, -3)
-    // ),
-    // new InstantCommand(()->{
-    //   index.setState(indexStates.Standby);
-    //   Timer.delay(0.25);
-    // }),
-    // new driveSide(s_Swerve, -1.5494),//right is positive (robot head is forward side)
-
-    // new turnForTime(s_Swerve, 1.25, 2.7),
-    
-    // new drivefront(s_Swerve, -2.2098),
-    // new drivefront(s_Swerve, 1)
-
-
-      // new indexAuto(index, indexStates.AimTop),
-      // new betterDelay(0.5),
-
-
-      // new InstantCommand(()->{
-      //   index.shootByState();
-      //   Timer.delay(1);
-      // }),
-      // new driveForTime(s_Swerve, 4, -1),
-      // new turnForTime(s_Swerve, 1.25, 2.7), // 180
-      // new sideForTime(s_Swerve, 2, 1)
+    //new driveForTime(s_Swerve, 3, 1.5)
     );
-    // return new SequentialCommandGroup(
-    //   new indexAuto(index, indexStates.AimTop),
-    //   new InstantCommand(()->{
-    //     index.shootByState();
-    //   }),
-    //   new turn(s_Swerve, 180),
-    //   new drivefront(s_Swerve, -5.6896),
-    //   new indexAuto(index, indexStates.Indexing),
-    //   new ParallelCommandGroup(
-    //   new indexAuto(index, indexStates.Standby),
-    //   new driveSide(s_Swerve, -1.2192)
-    //   ),
-    //   new drivefront(s_Swerve, 0.78105),
-    //   new balance(s_Swerve)
-    // );
-
   }
 }
