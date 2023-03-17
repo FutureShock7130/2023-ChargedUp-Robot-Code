@@ -94,23 +94,23 @@ public class RobotContainer {
      * x+ back
      */
 
-    //blue left
-    // return new SequentialCommandGroup(
+    blue left
+    return new SequentialCommandGroup(
 
-    // new InstantCommand(()->{
-    //   index.setState(indexStates.AimTop);
-    // }),
-    // new betterDelay(0.5),
-    // new ShootFor1s(index),
-    // new sideForTime(s_Swerve, 0.5, 0.5),
-    // new driveForTime(s_Swerve, 3, 1.5),
-    // new turnForTime(s_Swerve, 1.25, 2.7),
-    // new InstantCommand(()->{
-    //   index.setState(indexStates.Indexing);
-    // })
+    new InstantCommand(()->{
+      index.setState(indexStates.AimTop);
+    }),
+    new betterDelay(0.5),
+    new ShootFor1s(index),
+    new sideForTime(s_Swerve, 0.5, 0.5),
+    new driveForTime(s_Swerve, 3, 1.5),
+    new turnForTime(s_Swerve, 1.25, 2.7),
+    new InstantCommand(()->{
+      index.setState(indexStates.Indexing);
+    })
 
-    // //new driveForTime(s_Swerve, 3, 1.5)
-    // );
+    //new driveForTime(s_Swerve, 3, 1.5)
+    );
 
     // //middle
     // return new SequentialCommandGroup(
@@ -156,22 +156,22 @@ public class RobotContainer {
     // //new driveForTime(s_Swerve, 4, 1.5)
     // );
     
-    //red right
-    return new SequentialCommandGroup(
+    // //red right
+    // return new SequentialCommandGroup(
 
-    new InstantCommand(()->{
-      index.setState(indexStates.AimTop);
-    }),
-    new betterDelay(0.5),
-    new ShootFor1s(index),
-    new sideForTime(s_Swerve, 0.5, -0.5),
-    new driveForTime(s_Swerve, 3, 1.5),
-    new turnForTime(s_Swerve, 1.25, 2.7),
-    new InstantCommand(()->{
-      index.setState(indexStates.Indexing);
-    })
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.AimTop);
+    // }),
+    // new betterDelay(0.5),
+    // new ShootFor1s(index),
+    // new sideForTime(s_Swerve, 0.5, -0.5),
+    // new driveForTime(s_Swerve, 3, 1.5),
+    // new turnForTime(s_Swerve, 1.25, 2.7),
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.Indexing);
+    // })
 
-    //new driveForTime(s_Swerve, 3, 1.5)
-    );
+    // //new driveForTime(s_Swerve, 3, 1.5)
+    // );
   }
 }
