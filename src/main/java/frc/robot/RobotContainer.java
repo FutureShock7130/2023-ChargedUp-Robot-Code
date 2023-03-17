@@ -94,7 +94,7 @@ public class RobotContainer {
      * x+ back
      */
 
-    blue left
+    //blue left
     return new SequentialCommandGroup(
 
     new InstantCommand(()->{
