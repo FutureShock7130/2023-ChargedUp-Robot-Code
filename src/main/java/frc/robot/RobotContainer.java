@@ -102,10 +102,10 @@ public class RobotContainer {
     new ShootFor1s(index),
 
     // new driveSide(s_Swerve, -0.05),//check
-    new sideForTime(s_Swerve, 1, -0.5),//front view: y- left
-    new driveForTime(s_Swerve, 2.75, 1.5),//front view: x- forward
+    new sideForTime(s_Swerve, 1, 0.5),//front view: y- left
+    new driveForTime(s_Swerve, 1.75, 1.5),//front view: x- forward
 
-    new turnForTime(s_Swerve, 1.25, 2.7),
+    new turnForTime(s_Swerve, 1.24, 2.7),
 
     new ParallelCommandGroup(
       new driveForTime(s_Swerve, 1.25, -1.5),
@@ -115,11 +115,9 @@ public class RobotContainer {
     new InstantCommand(()->{
       index.setState(indexStates.Standby);
     }),
-    new sideForTime(s_Swerve, 1.5, -1.5),
+    // new turnForTime(s_Swerve, 1.25, 2.7),
 
-    new turnForTime(s_Swerve, 1.25, 2.7),
-
-    new driveForTime(s_Swerve, 2.5, -1.5)
+    new driveForTime(s_Swerve, 2, 1.5)
 
     // new betterDelay(0.05),
 
