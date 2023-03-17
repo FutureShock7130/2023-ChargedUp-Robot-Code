@@ -94,34 +94,7 @@ public class RobotContainer {
      * x+ back
      */
 
-    //blue left
-    return new SequentialCommandGroup(
-
-    new InstantCommand(()->{
-      index.setState(indexStates.AimTop);
-    }),
-    new betterDelay(0.5),
-    new ShootFor1s(index),
-    new sideForTime(s_Swerve, 0.5, 0.5),
-    new driveForTime(s_Swerve, 3, 1.5),
-    new turnForTime(s_Swerve, 1.25, 2.7),
-    new InstantCommand(()->{
-      index.setState(indexStates.Indexing);
-    })
-
-    //new driveForTime(s_Swerve, 3, 1.5)
-    );
-
-    // //middle
-    // return new SequentialCommandGroup(
-    //   new InstantCommand(()->{
-    //     index.setState(indexStates.AimTop);
-    //   }),
-    //   new betterDelay(0.5),
-    //   new driveForTime(s_Swerve, 3.5, 1)
-    // );
-
-    // //blue right
+    // // blue left
     // return new SequentialCommandGroup(
 
     // new InstantCommand(()->{
@@ -129,14 +102,48 @@ public class RobotContainer {
     // }),
     // new betterDelay(0.5),
     // new ShootFor1s(index),
-    // new sideForTime(s_Swerve, 0.5, -0.5),
-    // new driveForTime(s_Swerve, 4, 1.5),
+    // new sideForTime(s_Swerve, 0.5, 0.5),
+    // new driveForTime(s_Swerve, 3, 1.5),
     // new turnForTime(s_Swerve, 1.25, 2.7),
     // new InstantCommand(()->{
     //   index.setState(indexStates.Indexing);
     // })
 
-    // //new driveForTime(s_Swerve, 4, 1.5)
+    // //new driveForTime(s_Swerve, 3, 1.5)
+    // );
+
+    //middle
+    //blue left
+    return new SequentialCommandGroup(
+      new InstantCommand(()->{
+        index.setState(indexStates.AimTop);
+      }),
+      new betterDelay(1.5),
+      new ShootFor1s(index),
+      new betterDelay(4),
+      new driveForTime(s_Swerve, 3, 1)
+    );
+
+    // //blue right
+    // return new SequentialCommandGroup(
+
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.AimTop);
+    // }),
+    // new betterDelay(1.5),
+    // new ShootFor1s(index),
+    // new sideForTime(s_Swerve, 0.5, -0.5),
+    // new driveForTime(s_Swerve, 3.5, 1.5),
+    // new turnForTime(s_Swerve, 1.25, 2.7),
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.Indexing);
+    //   Timer.delay(1);
+    // }),
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.Standby);
+    // })
+
+    //new driveForTime(s_Swerve, 4, 1.5)
     // );
 
     // //red left
