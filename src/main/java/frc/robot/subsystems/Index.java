@@ -213,13 +213,13 @@ public class Index extends SubsystemBase {
   public void shootByState() {
     switch (state) {
       case AimTop:
-        shoot(-0.96);
+        shoot(-0.93);
         break;
       case AimMiddle:
         shoot(-0.56);
         break;
       case AimBottom:
-        shoot(-0.2);
+        shoot(-0.15);
         break;
       default:
         break;
