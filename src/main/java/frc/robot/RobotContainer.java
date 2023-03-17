@@ -113,6 +113,7 @@ public class RobotContainer {
     // );
 
     //middle
+    //blue left
     return new SequentialCommandGroup(
       new InstantCommand(()->{
         index.setState(indexStates.AimTop);
