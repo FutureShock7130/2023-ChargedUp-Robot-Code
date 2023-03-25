@@ -27,13 +27,13 @@ public class TeleopIndex extends CommandBase {
   @Override
   public void execute() {
     // Autos
-    if (xDriver.getYButton()) index.setState(indexStates.AimTop);
-    if (xDriver.getBButton()) index.setState(indexStates.AimMiddle);
-    if (xDriver.getAButton()) index.setState(indexStates.AimBottom);
+    if (xDriver.getYButtonPressed()) index.setState(indexStates.AimTop);
+    if (xDriver.getBButtonPressed()) index.setState(indexStates.AimMiddle);
+    if (xDriver.getAButtonPressed()) index.setState(indexStates.AimBottom);
     if (xDriver.getXButton()) index.shootByState();
-    if (xDriver.getLeftTriggerAxis() > 0.6) index.setState(indexStates.Indexing);
-    if (xDriver.getLeftBumper()) index.setState(indexStates.IndexHuman);
-    if (xDriver.getRightTriggerAxis() > 0.6) index.setState(indexStates.Standby);
+    if (xDriver.getLeftTriggerAxis() > 0.4) index.setState(indexStates.Indexing);
+    if (xDriver.getLeftBumperPressed()) index.setState(indexStates.IndexHuman);
+    if (xDriver.getRightTriggerAxis() > 0.4) index.setState(indexStates.Standby);
   }
 
 }

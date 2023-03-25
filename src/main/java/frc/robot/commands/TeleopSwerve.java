@@ -53,7 +53,7 @@ public class TeleopSwerve extends CommandBase {
               MathUtil.applyDeadband(xJoystick.getLeftY(), Constants.Swerve.stickDeadband));
       strafeVal =
           strafeLimiter.calculate(
-              MathUtil.applyDeadband(xJoystick.getLeftX(), Constants.Swerve.stickDeadband));
+              MathUtil.applyDeadband(xJoystick.getLeftX(), Constants.Swerve.stickDeadband));        
       rotationVal =
           rotationLimiter.calculate(
               MathUtil.applyDeadband(xJoystick.getRightX() * 0.5, Constants.Swerve.stickDeadband));

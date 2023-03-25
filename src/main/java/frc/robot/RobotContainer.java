@@ -50,7 +50,7 @@ public class RobotContainer {
   /* Subsystems */
   private final Swerve s_Swerve = new Swerve();
   private final Index index = new Index();
-  private final ApriltagSubsystem apriltag = new ApriltagSubsystem();
+  // private final ApriltagSubsystem apriltag = new ApriltagSubsystem();
   // private final Upper upper = new Upper();
   //private final Upper Superstructure = new Upper();
   // private final Intake iIntake = new Intake();
@@ -60,10 +60,6 @@ public class RobotContainer {
   public RobotContainer() {
     s_Swerve.setDefaultCommand(new TeleopSwerve(s_Swerve, driver));
     index.setDefaultCommand(new TeleopIndex(index, driver));
-    apriltag.setDefaultCommand(new RunCommand(()->{
-      Boolean ok = fieldShoot.OKshoot(apriltag.getCameratoTarget());
-      SmartDashboard.putBoolean("OKshoot", ok);
-    }, apriltag));
     // upper.setDefaultCommand(new TeleopUpper(upper, driver, operator, null));
 
     // Configure the button bindings
@@ -87,6 +83,7 @@ public class RobotContainer {
    */
 
   public Command getAutonomousCommand() {
+    // return new driveForTime(s_Swerve, 1, 1);
   
     /**
      * front view:
@@ -100,51 +97,55 @@ public class RobotContainer {
     // new InstantCommand(()->{
     //   index.setState(indexStates.AimTop);
     // }),
-    // new betterDelay(0.5),
-    // new ShootFor1s(index),
-    // new sideForTime(s_Swerve, 0.5, 0.5),
-    // new driveForTime(s_Swerve, 3, 1.5),
-    // new turnForTime(s_Swerve, 1.25, 2.7),
-    // new InstantCommand(()->{
-    //   index.setState(indexStates.Indexing);
-    // })
-
-    // //new driveForTime(s_Swerve, 3, 1.5)
-    // );
-
-    //middle
-    //blue left
-    return new SequentialCommandGroup(
-      new InstantCommand(()->{
-        index.setState(indexStates.AimTop);
-      }),
-      new betterDelay(1.5),
-      new ShootFor1s(index),
-      new betterDelay(4),
-      new driveForTime(s_Swerve, 3, 1)
-    );
-
-    // //blue right
-    // return new SequentialCommandGroup(
-
-    // new InstantCommand(()->{
-    //   index.setState(indexStates.AimTop);
-    // }),
     // new betterDelay(1.5),
     // new ShootFor1s(index),
-    // new sideForTime(s_Swerve, 0.5, -0.5),
-    // new driveForTime(s_Swerve, 3.5, 1.5),
-    // new turnForTime(s_Swerve, 1.25, 2.7),
-    // new InstantCommand(()->{
-    //   index.setState(indexStates.Indexing);
-    //   Timer.delay(1);
-    // }),
+    // new sideForTime(s_Swerve, 0.5, 0.5),
+    // new driveForTime(s_Swerve, 2.75, 1.5),
+    // new turnForTime(s_Swerve, 1.3, 2.7),
+    // new ParallelCommandGroup(
+    //   new InstantCommand(()->{
+    //     index.setState(indexStates.Indexing);
+    //   }),
+    //   new driveForTime(s_Swerve, 1.5, -0.5)
+    // ),
     // new InstantCommand(()->{
     //   index.setState(indexStates.Standby);
     // })
+    //   );
 
-    //new driveForTime(s_Swerve, 4, 1.5)
+    // //middle
+    // return new SequentialCommandGroup(
+    //   new InstantCommand(()->{
+    //     index.setState(indexStates.AimTop);
+    //   }),
+    //   new betterDelay(1.5),
+    //   new ShootFor1s(index)
+    //   // new betterDelay(6),
+    //   // new driveForTime(s_Swerve, 3, 1.25)
     // );
+
+    // blue right
+    return new SequentialCommandGroup(
+
+    new InstantCommand(()->{
+      index.setState(indexStates.AimTop);
+    }),
+    new betterDelay(1.5),
+    new ShootFor1s(index),
+    new sideForTime(s_Swerve, 0.5, -0.5),
+    new driveForTime(s_Swerve, 3, 1.5),
+    new turnForTime(s_Swerve, 1.31, 2.7),
+    new ParallelCommandGroup(
+      new InstantCommand(()->{
+      index.setState(indexStates.Indexing);
+    }),
+      new driveForTime(s_Swerve, 1, -0.5)
+    ),
+    new InstantCommand(()->{
+      index.setState(indexStates.Standby);
+    })
+
+    );
 
     // //red left
     // return new SequentialCommandGroup(
@@ -152,33 +153,44 @@ public class RobotContainer {
     // new InstantCommand(()->{
     //   index.setState(indexStates.AimTop);
     // }),
-    // new betterDelay(0.5),
+    // new betterDelay(1.5),
     // new ShootFor1s(index),
     // new sideForTime(s_Swerve, 0.5, 0.5),
-    // new driveForTime(s_Swerve, 4, 1.5),
-    // new turnForTime(s_Swerve, 1.25, 2.7),
-    // new InstantCommand(()->{
+    // new driveForTime(s_Swerve, 3, 1.5),
+    // new turnForTime(s_Swerve, 1.28, 2.7),
+    // new ParallelCommandGroup(
+    //   new InstantCommand(()->{
     //   index.setState(indexStates.Indexing);
+    // }),
+    //   new driveForTime(s_Swerve, 1, -0.5)
+    // ),
+    // new InstantCommand(()->{
+    //   index.setState(indexStates.Standby);
     // })
-    // //new driveForTime(s_Swerve, 4, 1.5)
+
     // );
+
     
     // //red right
     // return new SequentialCommandGroup(
 
     // new InstantCommand(()->{
-    //   index.setState(indexStates.AimTop);
+    //   index.setState(indexStates.AimBottom);
     // }),
-    // new betterDelay(0.5),
+    // new betterDelay(1.5),
     // new ShootFor1s(index),
     // new sideForTime(s_Swerve, 0.5, -0.5),
-    // new driveForTime(s_Swerve, 3, 1.5),
-    // new turnForTime(s_Swerve, 1.25, 2.7),
+    // new driveForTime(s_Swerve, 2.75, 1.5),
+    // new turnForTime(s_Swerve, 1.28, 2.7),
+    // new ParallelCommandGroup(
+    //   new InstantCommand(()->{
+    //     index.setState(indexStates.Indexing);
+    //   }),
+    //   new driveForTime(s_Swerve, 1.5, -0.5)
+    // ),
     // new InstantCommand(()->{
-    //   index.setState(indexStates.Indexing);
+    //   index.setState(indexStates.Standby);
     // })
-
-    // //new driveForTime(s_Swerve, 3, 1.5)
     // );
   }
 }

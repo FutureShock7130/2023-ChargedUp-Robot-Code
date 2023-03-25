@@ -50,7 +50,8 @@ public class Index extends SubsystemBase {
   public enum indexPos {
     Up, // Up Limit
     Down, // Down Limit
-    GridCom // In Community
+    GridCom, // In Community
+    LowerGrid // lower
   }
 
   // Tested Pos
@@ -59,6 +60,7 @@ public class Index extends SubsystemBase {
     public static double upSmoothPoint = -3564;
     public static double downlimit = -29000;
     public static double inCom = -6900;
+    public static double lowerGrid = -20000;
   }
 
   private double currentTilterPos;
@@ -77,7 +79,7 @@ public class Index extends SubsystemBase {
     updateStates();
     if (shoot) shoot(-1);
     if (limitSwitch.get() && tilter.getSelectedSensorVelocity() > 0) tilter.set(0);
-    if (!limitSwitch.get() && desirePos == indexPos.Up ) tilter.set(0.15);
+    if (!limitSwitch.get() && desirePos == indexPos.Up ) tilter.set(0.11);
 
     SmartDashboard.putBoolean("Intake isClamped", isClamped);
     SmartDashboard.putBoolean("Intake atUpLimit", limitSwitch.get());
@@ -157,6 +159,11 @@ public class Index extends SubsystemBase {
       case GridCom:
         desirePos = indexPos.GridCom;
         setTilter(MathUtility.clamp(tilterPID.calculate(tilterPos.inCom - currentTilterPos), -0.17, 0.17));
+        break;
+      case LowerGrid:
+        desirePos = indexPos.LowerGrid;
+        setTilter(MathUtility.clamp(tilterPID.calculate(tilterPos.lowerGrid - currentTilterPos), -0.2, 0.2));
+        break;
       default:
         break;
     }
@@ -193,7 +200,7 @@ public class Index extends SubsystemBase {
       case AimBottom:
         clamp();
         setRollers(0);
-        setTilterPosAuto(indexPos.GridCom);
+        setTilterPosAuto(indexPos.LowerGrid);
         lastState = indexStates.AimBottom;
         break;
       case Standby:
@@ -205,24 +212,26 @@ public class Index extends SubsystemBase {
           lastState = indexStates.Standby;
           counter = 0;
         }
+        break;
       default:
         break;
     }
   }
 
+
   public void shootByState() {
     switch (state) {
-      case AimTop:
-        shoot(-0.93);
-        break;
-      case AimMiddle:
-        shoot(-0.56);
-        break;
-      case AimBottom:
-        shoot(-0.15);
-        break;
-      default:
-        break;
+        case AimTop:
+          shoot(-0.93);
+          break;
+        case AimMiddle:
+          shoot(-0.56);
+          break;
+        case AimBottom:
+          shoot(-0.15);
+          break;
+        default:
+          break;
     }
   }
 
